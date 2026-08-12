@@ -10,7 +10,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class StorefrontNavigation {
   readonly isOpen = input.required<boolean>();
+  readonly dismissed = output<void>();
   readonly navigated = output<void>();
+
+  protected dismiss(): void {
+    this.dismissed.emit();
+  }
 
   protected notifyNavigation(): void {
     this.navigated.emit();

@@ -35,7 +35,7 @@
       <button
         class="menu-toggle"
         type="button"
-        aria-label="Toggle navigation"
+        [attr.aria-label]="isMenuOpen() ? 'Close navigation' : 'Open navigation'"
         aria-controls="storefront-navigation"
         [attr.aria-expanded]="isMenuOpen()"
         (click)="toggleMenu()"
@@ -94,5 +94,9 @@
     </div>
   </div>
 
-  <app-storefront-navigation [isOpen]="isMenuOpen()" (navigated)="closeMenu()" />
+  <app-storefront-navigation
+    [isOpen]="isMenuOpen()"
+    (dismissed)="closeMenu()"
+    (navigated)="closeMenu()"
+  />
 </header>

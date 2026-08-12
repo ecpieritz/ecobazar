@@ -1,9 +1,21 @@
-<div class="navigation-bar">
-  <div
-    id="storefront-navigation"
-    class="container navigation-bar__content"
-    [class.is-open]="isOpen()"
-  >
+<div class="navigation-bar" [class.is-open]="isOpen()">
+  <button
+    class="navigation-backdrop"
+    type="button"
+    aria-label="Close navigation"
+    [attr.tabindex]="isOpen() ? 0 : -1"
+    (click)="dismiss()"
+  ></button>
+  <div id="storefront-navigation" class="container navigation-bar__content">
+    <div class="mobile-menu-heading">
+      <strong>Menu</strong>
+      <button type="button" aria-label="Close navigation" (click)="dismiss()">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m5 5 14 14M19 5 5 19" />
+        </svg>
+      </button>
+    </div>
+
     <form class="mobile-search" role="search" (submit)="preventSearchNavigation($event)">
       <label class="visually-hidden" for="mobile-store-search">Search products</label>
       <svg aria-hidden="true" viewBox="0 0 24 24">

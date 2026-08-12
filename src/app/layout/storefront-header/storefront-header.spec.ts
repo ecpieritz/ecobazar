@@ -28,7 +28,7 @@ describe('StorefrontHeader', () => {
     const fixture = TestBed.createComponent(StorefrontHeader);
     fixture.detectChanges();
     const toggle = fixture.debugElement.query(By.css('.menu-toggle'));
-    const navigation = fixture.debugElement.query(By.css('.navigation-bar__content'));
+    const navigation = fixture.debugElement.query(By.css('.navigation-bar'));
 
     expect(toggle.attributes['aria-expanded']).toBe('false');
     expect(navigation.classes['is-open']).toBeFalsy();
@@ -38,6 +38,7 @@ describe('StorefrontHeader', () => {
 
     expect(toggle.attributes['aria-expanded']).toBe('true');
     expect(navigation.classes['is-open']).toBe(true);
+    expect(document.body.style.overflow).toBe('hidden');
 
     fixture.debugElement
       .query(By.css('.primary-navigation a'))
@@ -46,5 +47,49 @@ describe('StorefrontHeader', () => {
 
     expect(toggle.attributes['aria-expanded']).toBe('false');
     expect(navigation.classes['is-open']).toBeFalsy();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('should dismiss the mobile navigation from its backdrop', () => {
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    fixture.detectChanges();
+    const toggle = fixture.debugElement.query(By.css('.menu-toggle'));
+
+    toggle.triggerEventHandler('click');
+    fixture.detectChanges();
+    fixture.debugElement.query(By.css('.navigation-backdrop')).triggerEventHandler('click');
+    fixture.detectChanges();
+
+    expect(toggle.attributes['aria-expanded']).toBe('false');
+  });
+
+  it('should close the mobile navigation when Escape is pressed', () => {
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    fixture.detectChanges();
+    const toggle = fixture.debugElement.query(By.css('.menu-toggle'));
+
+    toggle.triggerEventHandler('click');
+    fixture.detectChanges();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+
+    expect(toggle.attributes['aria-expanded']).toBe('false');
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('should close the mobile navigation when entering the desktop breakpoint', () => {
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    fixture.detectChanges();
+    const toggle = fixture.debugElement.query(By.css('.menu-toggle'));
+    const originalWidth = window.innerWidth;
+
+    toggle.triggerEventHandler('click');
+    fixture.detectChanges();
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
+    window.dispatchEvent(new Event('resize'));
+    fixture.detectChanges();
+
+    expect(toggle.attributes['aria-expanded']).toBe('false');
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
   });
 });
