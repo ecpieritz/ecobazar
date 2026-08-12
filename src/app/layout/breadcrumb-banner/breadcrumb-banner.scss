@@ -1,0 +1,120 @@
+@use 'abstracts' as *;
+
+:host {
+  display: block;
+}
+
+.breadcrumb-banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--color-neutral-400);
+  background:
+    linear-gradient(
+      90deg,
+      rgb(12 20 15 / 96%) 0%,
+      rgb(13 25 17 / 90%) 45%,
+      rgb(10 31 15 / 78%) 100%
+    ),
+    var(--color-neutral-900);
+
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    border-radius: 50%;
+    filter: blur(1px);
+    opacity: 0.28;
+  }
+
+  &::before {
+    inset-block-start: -5rem;
+    inset-inline-end: 8%;
+    width: 15rem;
+    height: 12rem;
+    background: radial-gradient(circle at 35% 65%, #9bc53d 0 18%, #387c2b 19% 42%, transparent 43%);
+    transform: rotate(-18deg) scaleX(1.5);
+  }
+
+  &::after {
+    inset-block-end: -5rem;
+    inset-inline-end: -2rem;
+    width: 18rem;
+    height: 11rem;
+    background: radial-gradient(circle at 40% 35%, #ef8e22 0 17%, #b62525 18% 34%, transparent 35%);
+    transform: rotate(12deg) scaleX(1.6);
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    min-height: 6.5rem;
+    padding-block: var(--space-5);
+  }
+}
+
+ol,
+.breadcrumb-item,
+.home-link {
+  display: flex;
+  align-items: center;
+}
+
+ol {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.breadcrumb-item {
+  gap: var(--space-2);
+  min-width: 0;
+  font-size: var(--font-size-sm);
+
+  a,
+  span {
+    @include text-truncate;
+    max-width: min(15rem, 55vw);
+  }
+
+  a:hover {
+    color: var(--color-white);
+  }
+
+  [aria-current='page'] {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.home-link {
+  padding: var(--space-1);
+  border-radius: var(--radius-xs);
+
+  &:hover {
+    color: var(--color-white);
+  }
+
+  svg {
+    width: 1.25rem;
+  }
+}
+
+svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.separator {
+  flex: 0 0 auto;
+  width: 0.875rem;
+}
+
+@include from(md) {
+  .breadcrumb-banner__content {
+    min-height: 7.5rem;
+  }
+}

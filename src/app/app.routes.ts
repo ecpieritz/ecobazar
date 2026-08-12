@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { breadcrumbRouteData } from '@layout/breadcrumb-banner/breadcrumb-item';
+
 export const routes: Routes = [
   {
     path: '',
@@ -16,12 +18,14 @@ export const routes: Routes = [
   {
     path: 'cart',
     title: 'Shopping cart | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Shopping Cart' }),
     loadComponent: () =>
       import('@features/cart/pages/cart-page/cart-page').then(({ CartPage }) => CartPage),
   },
   {
     path: 'wishlist',
     title: 'Wishlist | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Wishlist' }),
     loadComponent: () =>
       import('@features/wishlist/pages/wishlist-page/wishlist-page').then(
         ({ WishlistPage }) => WishlistPage,
@@ -30,6 +34,7 @@ export const routes: Routes = [
   {
     path: 'checkout',
     title: 'Checkout | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Shopping Cart', route: '/cart' }, { label: 'Checkout' }),
     loadComponent: () =>
       import('@features/checkout/pages/checkout-page/checkout-page').then(
         ({ CheckoutPage }) => CheckoutPage,
@@ -38,12 +43,14 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'Sign in | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Account', route: '/account' }, { label: 'Login' }),
     loadComponent: () =>
       import('@features/auth/pages/login-page/login-page').then(({ LoginPage }) => LoginPage),
   },
   {
     path: 'register',
     title: 'Create account | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Account', route: '/account' }, { label: 'Create Account' }),
     loadComponent: () =>
       import('@features/auth/pages/register-page/register-page').then(
         ({ RegisterPage }) => RegisterPage,
@@ -57,18 +64,21 @@ export const routes: Routes = [
   {
     path: 'about',
     title: 'About us | Ecobazar',
+    data: breadcrumbRouteData({ label: 'About Us' }),
     loadComponent: () =>
       import('@features/content/pages/about-page/about-page').then(({ AboutPage }) => AboutPage),
   },
   {
     path: 'faq',
     title: 'Frequently asked questions | Ecobazar',
+    data: breadcrumbRouteData({ label: 'FAQs' }),
     loadComponent: () =>
       import('@features/content/pages/faq-page/faq-page').then(({ FaqPage }) => FaqPage),
   },
   {
     path: 'contact',
     title: 'Contact us | Ecobazar',
+    data: breadcrumbRouteData({ label: 'Contact' }),
     loadComponent: () =>
       import('@features/content/pages/contact-page/contact-page').then(
         ({ ContactPage }) => ContactPage,
@@ -77,6 +87,7 @@ export const routes: Routes = [
   {
     path: '**',
     title: 'Page not found | Ecobazar',
+    data: breadcrumbRouteData({ label: '404 Error Page' }),
     loadComponent: () =>
       import('@features/not-found/pages/not-found-page/not-found-page').then(
         ({ NotFoundPage }) => NotFoundPage,

@@ -1,0 +1,30 @@
+<section class="breadcrumb-banner" aria-label="Page context">
+  <div class="container breadcrumb-banner__content">
+    <nav aria-label="Breadcrumb">
+      <ol role="list">
+        <li>
+          <a class="home-link" routerLink="/" aria-label="Home">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m3 11 9-8 9 8" />
+              <path d="M5 10v10h14V10M9 20v-6h6v6" />
+            </svg>
+          </a>
+        </li>
+
+        @for (item of items(); track item.label; let last = $last) {
+          <li class="breadcrumb-item">
+            <svg class="separator" aria-hidden="true" viewBox="0 0 16 16">
+              <path d="m6 3 5 5-5 5" />
+            </svg>
+
+            @if (item.route && !last) {
+              <a [routerLink]="item.route">{{ item.label }}</a>
+            } @else {
+              <span [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span>
+            }
+          </li>
+        }
+      </ol>
+    </nav>
+  </div>
+</section>

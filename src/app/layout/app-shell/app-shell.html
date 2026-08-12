@@ -1,4 +1,7 @@
 <app-storefront-header />
+@if (breadcrumbs().length > 0) {
+  <app-breadcrumb-banner [items]="breadcrumbs()" />
+}
 <main>
   <router-outlet />
 </main>
