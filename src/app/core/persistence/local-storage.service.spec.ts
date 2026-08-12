@@ -59,6 +59,20 @@ describe('LocalStorageService', () => {
     expect(service.has(preferencesKey)).toBe(true);
   });
 
+  it('should preserve falsy primitive values', () => {
+    const enabledKey = createPersistenceKey<boolean>('enabled');
+    const countKey = createPersistenceKey<number>('count');
+    const searchKey = createPersistenceKey<string>('search');
+
+    expect(service.set(enabledKey, false)).toBe(true);
+    expect(service.set(countKey, 0)).toBe(true);
+    expect(service.set(searchKey, '')).toBe(true);
+
+    expect(service.get(enabledKey)).toBe(false);
+    expect(service.get(countKey)).toBe(0);
+    expect(service.get(searchKey)).toBe('');
+  });
+
   it('should remove a persisted value', () => {
     service.set(preferencesKey, { currency: 'USD', compactView: false });
 
@@ -108,5 +122,33 @@ describe('LocalStorageService', () => {
     };
 
     expect(service.set(preferencesKey, { currency: 'USD', compactView: false })).toBe(false);
+  });
+
+  it('should report serialization failures without writing partial data', () => {
+    const circularValue: { self?: unknown } = {};
+    circularValue.self = circularValue;
+    const circularKey = createPersistenceKey<typeof circularValue>('circular');
+
+    expect(service.set(circularKey, circularValue)).toBe(false);
+    expect(storage.getItem('ecobazar:circular')).toBeNull();
+  });
+
+  it('should handle storage read failures as missing values', () => {
+    storage.getItem = (): string | null => {
+      throw new DOMException('Storage blocked', 'SecurityError');
+    };
+
+    expect(service.get(preferencesKey)).toBeNull();
+    expect(service.has(preferencesKey)).toBe(false);
+  });
+
+  it('should report remove and clear failures without throwing', () => {
+    storage.removeItem = (): void => {
+      throw new DOMException('Storage blocked', 'SecurityError');
+    };
+    service.set(preferencesKey, { currency: 'USD', compactView: false });
+
+    expect(service.remove(preferencesKey)).toBe(false);
+    expect(service.clear()).toBe(false);
   });
 });
