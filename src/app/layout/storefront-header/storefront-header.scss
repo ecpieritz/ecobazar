@@ -1,0 +1,245 @@
+@use 'abstracts' as *;
+
+:host {
+  position: relative;
+  z-index: var(--z-index-sticky);
+  display: block;
+}
+
+svg {
+  width: 1.5rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.topbar {
+  color: var(--color-neutral-300);
+  font-size: var(--font-size-xs);
+  background: var(--color-neutral-800);
+
+  &__content,
+  &__meta,
+  .store-location {
+    display: flex;
+    align-items: center;
+  }
+
+  &__content {
+    min-height: 2.625rem;
+  }
+
+  &__meta {
+    gap: var(--space-2);
+    margin-inline-start: auto;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 1rem;
+    margin-inline: var(--space-2);
+    background: var(--color-neutral-600);
+  }
+
+  a:hover {
+    color: var(--color-white);
+  }
+
+  select {
+    padding: var(--space-1);
+    color: inherit;
+    font-size: inherit;
+    background: transparent;
+    border: 0;
+  }
+}
+
+.store-location {
+  display: none !important;
+  gap: var(--space-2);
+
+  svg {
+    width: 1rem;
+  }
+}
+
+.header-main {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+
+  &__content {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    align-items: center;
+    min-height: 5rem;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  width: fit-content;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+
+  &__mark {
+    width: 2.25rem;
+    color: var(--color-primary);
+    fill: var(--color-primary);
+    stroke-width: 1.2;
+  }
+}
+
+.menu-toggle,
+.icon-link {
+  display: grid;
+  place-items: center;
+  padding: var(--space-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+
+.search {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  svg {
+    align-self: center;
+    width: 1.25rem;
+    margin-inline: var(--space-4) 0;
+  }
+
+  input {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-3);
+    border: 0;
+    outline: 0;
+  }
+
+  button {
+    min-width: 6rem;
+    padding-inline: var(--space-5);
+    color: var(--color-text-inverse);
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-primary);
+    border: 0;
+
+    &:hover {
+      background: var(--color-primary-hover);
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-focus-ring);
+  }
+
+  &--desktop {
+    display: none;
+  }
+}
+
+.header-actions,
+.cart-link,
+.cart-link__icon {
+  display: flex;
+  align-items: center;
+}
+
+.header-actions {
+  justify-self: end;
+
+  &__divider {
+    width: 1px;
+    height: 2rem;
+    margin-inline: var(--space-2);
+    background: var(--color-border);
+  }
+}
+
+.icon-link:hover,
+.cart-link:hover {
+  color: var(--color-primary);
+}
+
+.cart-link {
+  gap: var(--space-3);
+
+  &__icon {
+    position: relative;
+  }
+
+  &__count {
+    position: absolute;
+    inset-block-start: -0.5rem;
+    inset-inline-end: -0.5rem;
+    display: grid;
+    place-items: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--color-white);
+    font-size: 0.625rem;
+    background: var(--color-success);
+    border: 1px solid var(--color-white);
+    border-radius: 50%;
+  }
+
+  &__copy {
+    display: none;
+
+    small,
+    strong {
+      display: block;
+    }
+
+    small {
+      color: var(--color-text-muted);
+      font-size: 0.6875rem;
+    }
+
+    strong {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+@include from(md) {
+  .store-location {
+    display: flex !important;
+  }
+
+  .header-main__content {
+    grid-template-columns: auto auto minmax(12rem, 1fr) auto;
+    gap: var(--space-6);
+  }
+
+  .search--desktop {
+    display: flex;
+  }
+
+  .cart-link__copy {
+    display: block;
+  }
+}
+
+@include from(lg) {
+  .header-main__content {
+    grid-template-columns: minmax(13rem, 0.7fr) minmax(20rem, 1.7fr) minmax(13rem, 0.7fr);
+    min-height: 5.625rem;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
