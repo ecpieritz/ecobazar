@@ -5,11 +5,13 @@ import { filter } from 'rxjs';
 
 import { BreadcrumbBanner } from '../breadcrumb-banner/breadcrumb-banner';
 import { BREADCRUMBS_ROUTE_DATA, type BreadcrumbItem } from '../breadcrumb-banner/breadcrumb-item';
+import { NewsletterSignup } from '../newsletter-signup/newsletter-signup';
+import { StorefrontFooter } from '../storefront-footer/storefront-footer';
 import { StorefrontHeader } from '../storefront-header/storefront-header';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, StorefrontHeader, BreadcrumbBanner],
+  imports: [RouterOutlet, StorefrontHeader, BreadcrumbBanner, NewsletterSignup, StorefrontFooter],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

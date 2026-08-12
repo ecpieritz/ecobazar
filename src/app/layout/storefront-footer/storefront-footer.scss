@@ -1,0 +1,160 @@
+@use 'abstracts' as *;
+
+:host {
+  display: block;
+}
+
+.storefront-footer {
+  color: var(--color-neutral-500);
+  background: var(--color-surface-inverse);
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) var(--space-6);
+    padding-block: var(--space-12);
+  }
+
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-6);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    border-top: 1px solid var(--color-neutral-800);
+  }
+}
+
+.company {
+  grid-column: 1 / -1;
+
+  > p {
+    max-width: 23rem;
+    margin-block: var(--space-5);
+    font-size: var(--font-size-sm);
+  }
+}
+
+.footer-brand {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--color-white);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-medium);
+
+  svg {
+    width: 2.25rem;
+    color: var(--color-primary);
+    fill: var(--color-primary);
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.2;
+  }
+}
+
+address {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--font-size-sm);
+  font-style: normal;
+
+  a {
+    padding-block-end: var(--space-1);
+    color: var(--color-white);
+    border-bottom: 1px solid var(--color-primary);
+  }
+}
+
+.footer-links {
+  h2 {
+    margin-block-end: var(--space-4);
+    color: var(--color-white);
+    font-size: var(--font-size-base);
+  }
+
+  li + li {
+    margin-block-start: var(--space-2);
+  }
+
+  a {
+    font-size: var(--font-size-sm);
+
+    &:hover {
+      color: var(--color-white);
+    }
+  }
+}
+
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+
+  li {
+    display: flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: var(--space-1) var(--space-2);
+    color: var(--color-neutral-300);
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--color-neutral-700);
+    border-radius: var(--radius-xs);
+  }
+}
+
+.mastercard {
+  position: relative;
+  width: 1.75rem;
+  height: 1rem;
+
+  &::before,
+  &::after {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    content: '';
+    border-radius: 50%;
+  }
+
+  &::before {
+    inset-inline-start: 0;
+    background: #eb001b;
+  }
+
+  &::after {
+    inset-inline-end: 0;
+    background: #f79e1b;
+    opacity: 0.9;
+  }
+}
+
+@include from(md) {
+  .storefront-footer__content {
+    grid-template-columns: minmax(17rem, 1.5fr) repeat(2, minmax(8rem, 1fr));
+  }
+
+  .company {
+    grid-row: span 2;
+    grid-column: auto;
+  }
+
+  .storefront-footer__bottom {
+    flex-direction: row;
+    text-align: start;
+  }
+}
+
+@include from(xl) {
+  .storefront-footer__content {
+    grid-template-columns: minmax(20rem, 1.7fr) repeat(4, minmax(8rem, 1fr));
+  }
+}

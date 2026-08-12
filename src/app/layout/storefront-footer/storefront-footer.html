@@ -1,0 +1,47 @@
+<footer class="storefront-footer">
+  <div class="container storefront-footer__content">
+    <section class="company" aria-labelledby="footer-company-title">
+      <a class="footer-brand" routerLink="/" id="footer-company-title" aria-label="Ecobazar home">
+        <svg aria-hidden="true" viewBox="0 0 40 34">
+          <path d="M18 16C7 16 3 8 4 2c8 0 16 4 16 12v16" />
+          <path d="M22 18C22 8 29 4 38 5c0 8-5 15-16 15" />
+          <path d="M8 7c5 2 9 6 12 11M34 9c-5 2-9 6-12 11" />
+        </svg>
+        <span>Ecobazar</span>
+      </a>
+      <p>Fresh organic groceries selected with care and delivered for a healthier everyday life.</p>
+      <address>
+        <a href="tel:+12195550114">(219) 555-0114</a>
+        <span>or</span>
+        <a href="mailto:hello@ecobazar.com">hello@ecobazar.com</a>
+      </address>
+    </section>
+
+    @for (group of linkGroups; track group.title) {
+      <nav class="footer-links" [attr.aria-label]="group.title">
+        <h2>{{ group.title }}</h2>
+        <ul role="list">
+          @for (link of group.links; track link.label) {
+            <li>
+              <a [routerLink]="link.route" [queryParams]="link.queryParams">{{ link.label }}</a>
+            </li>
+          }
+        </ul>
+      </nav>
+    }
+  </div>
+
+  <div class="container storefront-footer__bottom">
+    <p>Ecobazar eCommerce © {{ currentYear }}. All rights reserved.</p>
+    <ul class="payment-methods" role="list" aria-label="Accepted payment methods">
+      <li>Apple Pay</li>
+      <li>VISA</li>
+      <li>Discover</li>
+      <li>
+        <span class="mastercard" aria-hidden="true"></span
+        ><span class="visually-hidden">Mastercard</span>
+      </li>
+      <li>Secure Payment</li>
+    </ul>
+  </div>
+</footer>

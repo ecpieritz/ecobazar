@@ -5,6 +5,8 @@ import { provideRouter, Router, RouterOutlet } from '@angular/router';
 
 import { BreadcrumbBanner } from '../breadcrumb-banner/breadcrumb-banner';
 import { breadcrumbRouteData } from '../breadcrumb-banner/breadcrumb-item';
+import { NewsletterSignup } from '../newsletter-signup/newsletter-signup';
+import { StorefrontFooter } from '../storefront-footer/storefront-footer';
 import { AppShell } from './app-shell';
 import { StorefrontHeader } from '../storefront-header/storefront-header';
 
@@ -37,6 +39,8 @@ describe('AppShell', () => {
     expect(fixture.componentInstance).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(StorefrontHeader))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(RouterOutlet))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(NewsletterSignup))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(StorefrontFooter))).toBeTruthy();
   });
 
   it('should render breadcrumbs from the active route and hide them on routes without metadata', async () => {
