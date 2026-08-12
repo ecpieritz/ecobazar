@@ -7,19 +7,21 @@
 
     <div class="newsletter__form-area">
       <form (submit)="subscribe($event)">
-        <label class="visually-hidden" for="newsletter-email">Your email address</label>
-        <input
+        <app-form-control
           id="newsletter-email"
+          label="Your email address"
           name="email"
           type="email"
           placeholder="Your email address"
           autocomplete="email"
+          hideLabel
           required
-          (input)="clearFeedback()"
+          [formControl]="emailControl"
+          (valueChange)="clearFeedback()"
         />
-        <button type="submit">Subscribe</button>
+        <app-button type="submit">Subscribe</app-button>
       </form>
-      <p class="newsletter__feedback" aria-live="polite">{{ feedback() }}</p>
+      <app-feedback-message tone="success" [message]="feedback()" />
     </div>
 
     <nav class="social-links" aria-label="Social media">

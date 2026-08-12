@@ -1,0 +1,14 @@
+<button
+  class="button button--{{ variant() }} button--{{ size() }}"
+  [class.button--full-width]="fullWidth()"
+  [attr.aria-busy]="loading() || null"
+  [attr.aria-label]="accessibleLabel()"
+  [disabled]="disabled() || loading()"
+  [type]="type()"
+  (click)="handleClick($event)"
+>
+  @if (loading()) {
+    <span class="button__spinner" aria-hidden="true"></span>
+  }
+  <span class="button__content"><ng-content /></span>
+</button>

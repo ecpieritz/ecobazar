@@ -25,6 +25,8 @@ describe('NewsletterSignup', () => {
     const form = element.querySelector('form') as HTMLFormElement;
     const input = element.querySelector('input') as HTMLInputElement;
     input.value = 'customer@example.com';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
 
     form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
     fixture.detectChanges();

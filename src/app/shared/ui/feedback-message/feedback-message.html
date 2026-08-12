@@ -1,0 +1,29 @@
+<div
+  class="feedback feedback--{{ tone() }}"
+  [class.feedback--empty]="!message()"
+  [attr.role]="tone() === 'error' ? 'alert' : 'status'"
+  [attr.aria-live]="tone() === 'error' ? 'assertive' : 'polite'"
+>
+  @if (message(); as content) {
+    <span class="feedback__icon" aria-hidden="true">
+      @switch (tone()) {
+        @case ('success') {
+          &#10003;
+        }
+        @case ('warning') {
+          !
+        }
+        @case ('error') {
+          &times;
+        }
+        @default {
+          i
+        }
+      }
+    </span>
+    <span class="feedback__content">{{ content }}</span>
+    @if (dismissible()) {
+      <button type="button" aria-label="Dismiss message" (click)="dismissed.emit()">&times;</button>
+    }
+  }
+</div>

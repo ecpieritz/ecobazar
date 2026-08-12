@@ -1,0 +1,33 @@
+<label class="form-control__label" [class.form-control__label--hidden]="hideLabel()" [for]="id()">
+  {{ label() }}
+  @if (required()) {
+    <span aria-hidden="true">*</span>
+  }
+</label>
+
+<div class="form-control__field" [class.form-control__field--invalid]="error()">
+  <ng-content select="[controlPrefix]" />
+  <input
+    [id]="id()"
+    [name]="name() ?? id()"
+    [type]="type()"
+    [value]="currentValue()"
+    [placeholder]="placeholder()"
+    [autocomplete]="autocomplete()"
+    [required]="required()"
+    [disabled]="isDisabled()"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    (input)="updateValue($event)"
+    (blur)="markAsTouched()"
+  />
+  <ng-content select="[controlSuffix]" />
+</div>
+
+@if (error(); as errorMessage) {
+  <p class="form-control__message form-control__message--error" [id]="id() + '-error'">
+    {{ errorMessage }}
+  </p>
+} @else if (hint(); as hintMessage) {
+  <p class="form-control__message" [id]="id() + '-hint'">{{ hintMessage }}</p>
+}
