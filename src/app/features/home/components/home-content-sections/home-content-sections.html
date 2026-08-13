@@ -1,0 +1,85 @@
+<div class="content-sections">
+  <section class="testimonials" aria-labelledby="testimonials-title">
+    <header class="section-heading">
+      <p>Customer stories</p>
+      <h2 id="testimonials-title">What our clients say</h2>
+    </header>
+
+    <ul class="testimonials__grid">
+      @for (testimonial of testimonials; track testimonial.name) {
+        <li>
+          <figure class="testimonial-card">
+            <span class="testimonial-card__quote" aria-hidden="true">“</span>
+            <blockquote>
+              <p>{{ testimonial.quote }}</p>
+            </blockquote>
+
+            <figcaption>
+              <span class="testimonial-card__avatar" aria-hidden="true">
+                {{ testimonial.initials }}
+              </span>
+              <span class="testimonial-card__customer">
+                <strong>{{ testimonial.name }}</strong>
+                <span>{{ testimonial.role }}</span>
+              </span>
+              <span
+                class="testimonial-card__rating"
+                [attr.aria-label]="testimonial.rating + ' out of 5 stars'"
+              >
+                <span aria-hidden="true">★★★★★</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="partners" aria-labelledby="partners-title">
+    <h2 id="partners-title" class="visually-hidden">Our trusted partners</h2>
+    <ul>
+      @for (partner of partners; track partner.name) {
+        <li>
+          <span class="partner-mark" [attr.data-accent]="partner.accent" aria-hidden="true"></span>
+          <span>{{ partner.name }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="articles" aria-labelledby="latest-articles-title">
+    <header class="section-heading section-heading--centered">
+      <p>From the journal</p>
+      <h2 id="latest-articles-title">Latest Articles</h2>
+    </header>
+
+    <ul class="articles__grid">
+      @for (article of latestArticles; track article.title) {
+        <li>
+          <article class="article-card">
+            <div class="article-card__media">
+              <img
+                [src]="article.image.src"
+                [alt]="article.image.alt"
+                width="768"
+                height="480"
+                loading="lazy"
+              />
+              <time [attr.datetime]="article.publishedAt">
+                <strong>{{ article.publishedAt | date: 'dd' }}</strong>
+                <span>{{ article.publishedAt | date: 'MMM' }}</span>
+              </time>
+            </div>
+
+            <div class="article-card__content">
+              <p class="article-card__category">{{ article.category }}</p>
+              <h3>{{ article.title }}</h3>
+              <p>{{ article.excerpt }}</p>
+              <span class="article-card__coming-soon">Article coming soon</span>
+            </div>
+          </article>
+        </li>
+      }
+    </ul>
+  </section>
+</div>

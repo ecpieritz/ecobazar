@@ -32,5 +32,6 @@ describe('HomePage', () => {
     expect(fixture.nativeElement.querySelector('app-store-benefits')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-popular-categories')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-home-product-sections')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-home-content-sections')).toBeTruthy();
   });
 });

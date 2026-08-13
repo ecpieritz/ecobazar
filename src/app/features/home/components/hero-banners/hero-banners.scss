@@ -109,15 +109,25 @@
 
 .promo {
   position: relative;
+  isolation: isolate;
   min-height: 15rem;
   padding: var(--space-8);
   overflow: hidden;
   border-radius: var(--radius-lg);
 
-  > div:first-child {
+  > div:first-of-type {
     position: relative;
     z-index: 1;
     max-width: 14rem;
+  }
+
+  &__image {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   h2 {
@@ -143,28 +153,27 @@
   }
 
   &--summer {
-    background: linear-gradient(135deg, #f2f7e9, #dcebd1);
-  }
-
-  &__produce {
-    position: absolute;
-    right: -1rem;
-    bottom: -1.5rem;
-    display: flex;
-    align-items: flex-end;
-    font-size: clamp(4rem, 8vw, 6.5rem);
-    filter: drop-shadow(0 0.75rem 0.75rem rgb(0 0 0 / 12%));
-
-    span + span {
-      margin-inline-start: -1.75rem;
-    }
+    background: #f3f4e9;
   }
 
   &--deal {
+    display: grid;
+    place-items: center;
+    text-align: center;
     color: var(--color-text-inverse);
-    background:
-      radial-gradient(circle at 85% 15%, rgb(0 178 7 / 40%), transparent 30%),
-      linear-gradient(135deg, #102718, #07150d);
+    background: #07150d;
+
+    &::after {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      content: '';
+      background: rgb(0 24 10 / 38%);
+    }
+
+    > div:first-of-type {
+      max-width: 17rem;
+    }
 
     p:not(.promo__eyebrow) {
       color: rgb(255 255 255 / 72%);
