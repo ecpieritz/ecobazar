@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.home {
+  padding-block: var(--space-6) var(--space-16);
+}
+
+app-store-benefits {
+  position: relative;
+  z-index: 2;
+  display: block;
+  margin-block-start: var(--space-6);
+}

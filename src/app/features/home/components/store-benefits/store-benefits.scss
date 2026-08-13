@@ -1,0 +1,82 @@
+@use 'abstracts' as *;
+
+:host {
+  display: block;
+}
+
+.benefits {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+
+  ul {
+    display: grid;
+  }
+
+  li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-5);
+
+    & + li {
+      border-block-start: 1px solid var(--color-border);
+    }
+  }
+
+  svg {
+    flex: 0 0 auto;
+    width: 2.5rem;
+    color: var(--color-primary);
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+
+  h2 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: capitalize;
+  }
+
+  p {
+    margin-block-start: var(--space-1);
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-xs);
+  }
+}
+
+@include from(md) {
+  .benefits {
+    ul {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    li:nth-child(2) {
+      border-block-start: 0;
+    }
+
+    li:nth-child(even) {
+      border-inline-start: 1px solid var(--color-border);
+    }
+  }
+}
+
+@include from(xl) {
+  .benefits {
+    ul {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    li {
+      & + li,
+      &:nth-child(even) {
+        border-block-start: 0;
+        border-inline-start: 1px solid var(--color-border);
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__primary">
+    <img
+      src="/images/home/organic-grocery-hero.jpg"
+      alt="Organic grocery vendor holding a basket of fresh produce"
+      fetchpriority="high"
+    />
+    <div class="hero__content">
+      <p class="hero__eyebrow">Welcome to Ecobazar</p>
+      <h1 id="hero-title">Fresh &amp; Healthy Organic Food</h1>
+      <p class="hero__offer">Sale up to <strong>30% off</strong></p>
+      <p class="hero__supporting">Free shipping on all orders. Freshness delivered to your door.</p>
+      <a class="hero__button" routerLink="/shop">
+        Shop now
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__promotions" aria-label="Current promotions">
+    <article class="promo promo--summer">
+      <div>
+        <p class="promo__eyebrow">Summer sale</p>
+        <h2>75% off</h2>
+        <p>Only fruit &amp; vegetables</p>
+        <a routerLink="/shop" [queryParams]="{ sale: true }">
+          Shop now <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="promo__produce" aria-hidden="true">
+        <span>🍊</span><span>🥦</span><span>🍎</span>
+      </div>
+    </article>
+
+    <article class="promo promo--deal">
+      <div>
+        <p class="promo__eyebrow">Best deal</p>
+        <h2>Special products of the month</h2>
+        <a routerLink="/shop" [queryParams]="{ featured: true }">
+          Shop now <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </article>
+  </div>
+</section>

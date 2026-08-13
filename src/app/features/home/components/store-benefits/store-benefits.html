@@ -1,0 +1,34 @@
+<section class="benefits" aria-label="Store benefits">
+  <ul role="list">
+    @for (benefit of benefits; track benefit.title) {
+      <li>
+        <svg aria-hidden="true" viewBox="0 0 32 32">
+          @switch (benefit.icon) {
+            @case ('delivery') {
+              <path d="M3 7h16v15H3zM19 12h5l5 6v4H19z" />
+              <circle cx="9" cy="24" r="3" />
+              <circle cx="24" cy="24" r="3" />
+              <path d="M7 11h8M5 15h8" />
+            }
+            @case ('headset') {
+              <path d="M5 17v-3a11 11 0 0 1 22 0v3" />
+              <path d="M5 17h5v9H7a2 2 0 0 1-2-2zM27 17h-5v9h3a2 2 0 0 0 2-2zM22 26c0 2-2 3-5 3" />
+            }
+            @case ('payment') {
+              <path d="M6 10h20v17H6zM10 10V7a6 6 0 0 1 12 0v3" />
+              <path d="m12 19 3 3 6-7" />
+            }
+            @case ('package') {
+              <path d="m4 10 12-6 12 6-12 6zM4 10v13l12 6 12-6V10M16 16v13" />
+              <path d="m10 7 12 6" />
+            }
+          }
+        </svg>
+        <div>
+          <h2>{{ benefit.title }}</h2>
+          <p>{{ benefit.description }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+</section>

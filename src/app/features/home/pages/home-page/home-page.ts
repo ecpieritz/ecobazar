@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { HeroBanners } from '../../components/hero-banners/hero-banners';
+import { StoreBenefits } from '../../components/store-benefits/store-benefits';
+
 @Component({
   selector: 'app-home-page',
-  template: `
-    <main class="container">
-      <h1>Home</h1>
-    </main>
-  `,
+  imports: [HeroBanners, StoreBenefits],
+  templateUrl: './home-page.html',
+  styleUrl: './home-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {}
