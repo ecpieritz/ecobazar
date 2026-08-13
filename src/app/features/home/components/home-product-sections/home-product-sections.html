@@ -1,0 +1,106 @@
+<div class="product-sections">
+  <section class="product-section" aria-labelledby="featured-products-title">
+    <header class="section-header">
+      <div>
+        <p>Handpicked for you</p>
+        <h2 id="featured-products-title">Featured Products</h2>
+      </div>
+
+      <a routerLink="/shop" [queryParams]="{ sort: 'featured' }">
+        View all
+        <span aria-hidden="true">→</span>
+      </a>
+    </header>
+
+    @switch (state().status) {
+      @case ('loading') {
+        <div
+          class="product-grid product-grid--featured"
+          aria-busy="true"
+          aria-label="Loading featured products"
+        >
+          @for (placeholder of [1, 2, 3, 4, 5]; track placeholder) {
+            <div class="product-skeleton" aria-hidden="true">
+              <span class="product-skeleton__image"></span>
+              <span class="product-skeleton__line"></span>
+              <span class="product-skeleton__line product-skeleton__line--short"></span>
+            </div>
+          }
+        </div>
+      }
+
+      @case ('error') {
+        <p class="section-message" role="alert">
+          Products are unavailable right now. Please try again later.
+        </p>
+      }
+
+      @default {
+        @if (state().groups.featured.length) {
+          <div class="product-grid product-grid--featured">
+            @for (product of state().groups.featured; track product.id) {
+              <app-product-card [product]="product" />
+            }
+          </div>
+        } @else {
+          <p class="section-message">No featured products available.</p>
+        }
+      }
+    }
+  </section>
+
+  <section class="promotion" aria-labelledby="promotional-products-title">
+    <div class="promotion__intro">
+      <p class="promotion__eyebrow">Limited-time savings</p>
+      <h2 id="promotional-products-title">Fresh deals, naturally better prices</h2>
+      <p class="promotion__copy">
+        Stock up on customer favorites and enjoy seasonal discounts while they last.
+      </p>
+      <a class="promotion__cta" routerLink="/shop" [queryParams]="{ sale: true }">
+        Shop sale
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    @switch (state().status) {
+      @case ('loading') {
+        <div
+          class="product-grid product-grid--promotional"
+          aria-busy="true"
+          aria-label="Loading promotional products"
+        >
+          @for (placeholder of [1, 2, 3, 4]; track placeholder) {
+            <div class="product-skeleton" aria-hidden="true">
+              <span class="product-skeleton__image"></span>
+              <span class="product-skeleton__line"></span>
+              <span class="product-skeleton__line product-skeleton__line--short"></span>
+            </div>
+          }
+        </div>
+      }
+
+      @case ('error') {
+        <p class="section-message section-message--inverse">
+          Promotional products could not be loaded.
+        </p>
+      }
+
+      @default {
+        @if (state().groups.promotional.length) {
+          <div class="product-grid product-grid--promotional">
+            @for (product of state().groups.promotional; track product.id) {
+              <div class="promotion-card">
+                <span class="promotion-card__discount">
+                  Save {{ discountPercentage(product) }}%
+                </span>
+                <app-product-card [product]="product" />
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="section-message section-message--inverse">No promotional products available.</p>
+        }
+      }
+    }
+  </section>
+</div>

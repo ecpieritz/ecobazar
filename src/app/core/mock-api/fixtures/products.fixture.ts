@@ -67,7 +67,7 @@ const productImages = (slug: string, name: string, count = 1): readonly ProductI
 
     return {
       id: `image-${slug}-${position}`,
-      src: `/images/products/${slug}-${position}.webp`,
+      src: `/images/products/${slug}-${position}.jpg`,
       alt: count === 1 ? name : `${name} view ${position}`,
       isPrimary: index === 0,
     };
