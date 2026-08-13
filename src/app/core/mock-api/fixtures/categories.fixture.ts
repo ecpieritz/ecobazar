@@ -16,7 +16,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'fresh-fruit',
     name: 'Fresh Fruit',
     description: 'Seasonal fruit selected for freshness, flavor, and quality.',
-    image: { src: '/images/categories/fresh-fruit.webp', alt: 'Assorted fresh fruit' },
+    image: { src: '/images/categories/fresh-fruit.jpg', alt: 'Assorted fresh fruit' },
     productCount: 3,
   },
   {
@@ -24,7 +24,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'vegetables',
     name: 'Vegetables',
     description: 'Fresh vegetables sourced from trusted growers.',
-    image: { src: '/images/categories/vegetables.webp', alt: 'Assorted fresh vegetables' },
+    image: { src: '/images/categories/vegetables.jpg', alt: 'Assorted fresh vegetables' },
     productCount: 13,
   },
   {
@@ -32,7 +32,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'cooking',
     name: 'Cooking',
     description: 'Everyday ingredients for home cooking.',
-    image: { src: '/images/categories/cooking.webp', alt: 'Cooking ingredients' },
+    image: { src: '/images/categories/cooking.jpg', alt: 'Cooking ingredients' },
     productCount: 0,
   },
   {
@@ -40,7 +40,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'snacks',
     name: 'Snacks',
     description: 'Simple snacks for any time of day.',
-    image: { src: '/images/categories/snacks.webp', alt: 'Healthy snacks' },
+    image: { src: '/images/categories/snacks.jpg', alt: 'Healthy snacks' },
     productCount: 0,
   },
   {
@@ -48,7 +48,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'beverages',
     name: 'Beverages',
     description: 'Refreshing drinks and natural beverages.',
-    image: { src: '/images/categories/beverages.webp', alt: 'Refreshing beverages' },
+    image: { src: '/images/categories/beverages.jpg', alt: 'Refreshing beverages' },
     productCount: 0,
   },
   {
@@ -56,7 +56,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'beauty-health',
     name: 'Beauty & Health',
     description: 'Wellness products for a balanced routine.',
-    image: { src: '/images/categories/beauty-health.webp', alt: 'Beauty and health products' },
+    image: { src: '/images/categories/beauty-health.jpg', alt: 'Beauty and health products' },
     productCount: 0,
   },
   {
@@ -64,7 +64,7 @@ export const PRODUCT_CATEGORIES_FIXTURE: readonly ProductCategory[] = [
     slug: 'bread-bakery',
     name: 'Bread & Bakery',
     description: 'Freshly baked bread and bakery favorites.',
-    image: { src: '/images/categories/bread-bakery.webp', alt: 'Bread and bakery products' },
+    image: { src: '/images/categories/bread-bakery.jpg', alt: 'Bread and bakery products' },
     productCount: 0,
   },
 ];

@@ -1,0 +1,69 @@
+<section class="categories" aria-labelledby="popular-categories-title">
+  <header class="categories__header">
+    <div>
+      <p class="categories__eyebrow">Shop by category</p>
+      <h2 id="popular-categories-title">Popular Categories</h2>
+    </div>
+
+    <a class="categories__view-all" routerLink="/shop">
+      View all
+      <span aria-hidden="true">→</span>
+    </a>
+  </header>
+
+  @switch (state().status) {
+    @case ('loading') {
+      <div class="categories__grid" aria-label="Loading popular categories" aria-busy="true">
+        @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+          <div class="category-card category-card--loading" aria-hidden="true">
+            <span class="category-card__skeleton-image"></span>
+            <span class="category-card__skeleton-line"></span>
+          </div>
+        }
+      </div>
+    }
+
+    @case ('error') {
+      <p class="categories__message" role="alert">
+        Categories are unavailable right now. Please try again later.
+      </p>
+    }
+
+    @default {
+      @if (state().categories.length) {
+        <ul class="categories__grid">
+          @for (category of state().categories; track category.id) {
+            <li>
+              <a
+                class="category-card"
+                routerLink="/shop"
+                [queryParams]="{ category: category.slug }"
+                [attr.aria-label]="'Shop ' + category.name"
+              >
+                <span class="category-card__media">
+                  <img
+                    [src]="category.image.src"
+                    [alt]="category.image.alt"
+                    width="320"
+                    height="320"
+                    loading="lazy"
+                  />
+                </span>
+
+                <span class="category-card__content">
+                  <strong>{{ category.name }}</strong>
+                  <span>
+                    {{ category.productCount }}
+                    {{ category.productCount === 1 ? 'product' : 'products' }}
+                  </span>
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="categories__message">No categories available.</p>
+      }
+    }
+  }
+</section>
