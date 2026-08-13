@@ -1,0 +1,114 @@
+@use 'abstracts' as *;
+
+:host {
+  display: contents;
+}
+
+.drawer {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+
+  &[open] {
+    display: flex;
+  }
+
+  &--end {
+    justify-content: flex-end;
+  }
+
+  &--start {
+    justify-content: flex-start;
+  }
+
+  &::backdrop {
+    background: rgb(0 0 0 / 58%);
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    width: min(100%, var(--drawer-width));
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &--small {
+    --drawer-width: 22rem;
+  }
+
+  &--medium {
+    --drawer-width: 30rem;
+  }
+
+  &--large {
+    --drawer-width: 42rem;
+  }
+
+  &__header {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--space-6);
+    border-block-end: 1px solid var(--color-border);
+
+    h2 {
+      font-size: var(--font-size-xl);
+    }
+
+    p {
+      margin-block-start: var(--space-1);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    button {
+      display: grid;
+      flex: 0 0 auto;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      place-items: center;
+      font-size: var(--font-size-2xl);
+      line-height: 1;
+      background: transparent;
+      border: 0;
+      border-radius: 50%;
+
+      &:hover {
+        background: var(--color-neutral-100);
+      }
+
+      &:focus-visible {
+        @include focus-ring;
+      }
+    }
+  }
+
+  &__body {
+    flex: 1;
+    padding: var(--space-6);
+    overflow: auto;
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+    padding: var(--space-4) var(--space-6);
+    border-block-start: 1px solid var(--color-border);
+
+    &:empty {
+      display: none;
+    }
+  }
+}

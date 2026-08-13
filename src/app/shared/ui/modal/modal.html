@@ -1,0 +1,26 @@
+<dialog
+  #dialog
+  class="modal"
+  [attr.aria-labelledby]="titleId"
+  [attr.aria-describedby]="description() ? descriptionId : null"
+  (cancel)="handleCancel($event)"
+  (pointerdown)="handleBackdrop($event)"
+  (close)="handleNativeClose()"
+>
+  <section class="modal__panel">
+    <header class="modal__header">
+      <div>
+        <h2 [id]="titleId">{{ title() }}</h2>
+        @if (description(); as supportingText) {
+          <p [id]="descriptionId">{{ supportingText }}</p>
+        }
+      </div>
+      <button type="button" [attr.aria-label]="closeLabel()" (click)="requestClose('close-button')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </header>
+
+    <div class="modal__body"><ng-content /></div>
+    <footer class="modal__actions"><ng-content select="[modalActions]" /></footer>
+  </section>
+</dialog>

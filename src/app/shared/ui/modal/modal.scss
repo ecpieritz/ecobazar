@@ -1,0 +1,92 @@
+@use 'abstracts' as *;
+
+:host {
+  display: contents;
+}
+
+.modal {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  padding: var(--space-4);
+  margin: 0;
+  overflow: auto;
+  background: transparent;
+  border: 0;
+
+  &[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  &::backdrop {
+    background: rgb(0 0 0 / 58%);
+    backdrop-filter: blur(0.125rem);
+  }
+
+  &__panel {
+    width: min(100%, 40rem);
+    max-height: calc(100dvh - (var(--space-8) * 2));
+    overflow: auto;
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__header {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--space-6);
+    border-block-end: 1px solid var(--color-border);
+
+    h2 {
+      font-size: var(--font-size-xl);
+    }
+
+    p {
+      margin-block-start: var(--space-1);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    button {
+      display: grid;
+      flex: 0 0 auto;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      place-items: center;
+      font-size: var(--font-size-2xl);
+      line-height: 1;
+      background: transparent;
+      border: 0;
+      border-radius: 50%;
+
+      &:hover {
+        background: var(--color-neutral-100);
+      }
+
+      &:focus-visible {
+        @include focus-ring;
+      }
+    }
+  }
+
+  &__body {
+    padding: var(--space-6);
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+    padding: 0 var(--space-6) var(--space-6);
+
+    &:empty {
+      display: none;
+    }
+  }
+}
