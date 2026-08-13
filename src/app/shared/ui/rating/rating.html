@@ -1,0 +1,9 @@
+<span class="rating rating--{{ size() }}" role="img" [attr.aria-label]="accessibleLabel()">
+  <span class="rating__stars" aria-hidden="true">
+    <span class="rating__base">{{ stars() }}</span>
+    <span class="rating__fill" [style.width]="fillPercentage()">{{ stars() }}</span>
+  </span>
+  @if (showCount() && count() !== null) {
+    <span class="rating__count">({{ count() }})</span>
+  }
+</span>

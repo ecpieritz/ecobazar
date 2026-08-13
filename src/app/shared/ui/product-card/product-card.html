@@ -1,0 +1,77 @@
+<article class="product-card" [class.product-card--unavailable]="unavailable()">
+  <div class="product-card__media">
+    @if (badgeLabel(); as badge) {
+      <span class="product-card__badge">{{ badge }}</span>
+    }
+    @if (unavailable()) {
+      <span class="product-card__stock">Out of stock</span>
+    }
+
+    <div class="product-card__actions">
+      <button
+        type="button"
+        [class.is-active]="wishlisted()"
+        [attr.aria-pressed]="wishlisted()"
+        [attr.aria-label]="(wishlisted() ? 'Remove ' : 'Add ') + product().name + ' from wishlist'"
+        (click)="toggleWishlist.emit(product())"
+      >
+        <span aria-hidden="true">♡</span>
+      </button>
+      <button
+        type="button"
+        [attr.aria-label]="'Quick view ' + product().name"
+        (click)="quickView.emit(product())"
+      >
+        <span aria-hidden="true">⌕</span>
+      </button>
+    </div>
+
+    <a
+      class="product-card__image-link"
+      [routerLink]="productRoute()"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      @if (primaryImage(); as image) {
+        <img [src]="image.src" [alt]="image.alt" loading="lazy" />
+      } @else {
+        <span class="product-card__image-placeholder">Image unavailable</span>
+      }
+    </a>
+  </div>
+
+  <div class="product-card__content">
+    <div class="product-card__details">
+      <h3>
+        <a [routerLink]="productRoute()">{{ product().name }}</a>
+      </h3>
+      <div class="product-card__prices">
+        <span class="product-card__price">
+          {{ product().price.amount | currency: product().price.currency }}/{{ unitLabel() }}
+        </span>
+        @if (product().compareAtPrice; as compareAtPrice) {
+          <s>{{ compareAtPrice.amount | currency: compareAtPrice.currency }}</s>
+        }
+        @if (discountPercentage(); as discount) {
+          <span class="visually-hidden">{{ discount }}% off</span>
+        }
+      </div>
+      <app-rating
+        size="small"
+        [value]="product().rating.average"
+        [count]="product().rating.count"
+        [showCount]="false"
+      />
+    </div>
+
+    <button
+      class="product-card__cart"
+      type="button"
+      [disabled]="unavailable()"
+      [attr.aria-label]="'Add ' + product().name + ' to cart'"
+      (click)="addToCart.emit(product())"
+    >
+      <span aria-hidden="true">＋</span>
+    </button>
+  </div>
+</article>
