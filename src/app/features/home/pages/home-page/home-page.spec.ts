@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { CategoryRepository, ProductRepository } from '@core/data-access';
+import { LOCAL_STORAGE } from '@core/persistence';
 
 import { HomePage } from './home-page';
 
@@ -13,6 +14,13 @@ describe('HomePage', () => {
       providers: [
         provideRouter([]),
         { provide: CategoryRepository, useValue: { getCategories: () => of([]) } },
+        {
+          provide: LOCAL_STORAGE,
+          useValue: {
+            getItem: () => 'true',
+            setItem: vi.fn(),
+          },
+        },
         {
           provide: ProductRepository,
           useValue: {
@@ -33,5 +41,6 @@ describe('HomePage', () => {
     expect(fixture.nativeElement.querySelector('app-popular-categories')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-home-product-sections')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-home-content-sections')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-newsletter-promotion-modal')).toBeTruthy();
   });
 });

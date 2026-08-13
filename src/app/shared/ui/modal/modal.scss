@@ -32,6 +32,28 @@
     background: var(--color-surface);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
+
+    &--promotion {
+      position: relative;
+      width: min(100%, 55rem);
+
+      .modal__header {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: 0;
+        padding: var(--space-4);
+        border: 0;
+
+        > div {
+          @include visually-hidden;
+        }
+      }
+
+      .modal__body {
+        padding: 0;
+      }
+    }
   }
 
   &__header {

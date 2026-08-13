@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HeroBanners } from '../../components/hero-banners/hero-banners';
 import { HomeContentSections } from '../../components/home-content-sections/home-content-sections';
 import { HomeProductSections } from '../../components/home-product-sections/home-product-sections';
+import { NewsletterPromotionModal } from '../../components/newsletter-promotion-modal/newsletter-promotion-modal';
 import { PopularCategories } from '../../components/popular-categories/popular-categories';
 import { StoreBenefits } from '../../components/store-benefits/store-benefits';
 
@@ -14,6 +15,7 @@ import { StoreBenefits } from '../../components/store-benefits/store-benefits';
     PopularCategories,
     HomeProductSections,
     HomeContentSections,
+    NewsletterPromotionModal,
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',

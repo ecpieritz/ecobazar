@@ -45,6 +45,18 @@ describe('Modal', () => {
     expect(dialog.getAttribute('aria-describedby')).toBe(description.id);
   });
 
+  it('supports the promotion presentation without changing dialog semantics', () => {
+    fixture.componentRef.setInput('variant', 'promotion');
+    fixture.componentRef.setInput('open', true);
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelector('dialog') as HTMLDialogElement;
+    const panel = fixture.nativeElement.querySelector('.modal__panel') as HTMLElement;
+
+    expect(dialog.getAttribute('aria-labelledby')).toBeTruthy();
+    expect(panel.classList.contains('modal__panel--promotion')).toBe(true);
+  });
+
   it('closes from Escape and reports the reason', () => {
     const closed = vi.fn();
     fixture.componentInstance.closed.subscribe(closed);

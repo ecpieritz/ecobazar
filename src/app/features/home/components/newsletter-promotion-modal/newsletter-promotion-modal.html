@@ -1,0 +1,49 @@
+<app-modal
+  title="Subscribe to Our Newsletter"
+  description="Save 20% with today's newsletter discount code."
+  closeLabel="Close newsletter promotion"
+  variant="promotion"
+  [(open)]="open"
+  (closed)="handleClosed()"
+>
+  <div class="newsletter-promotion">
+    <img
+      src="/images/home/newsletter-promotion.jpg"
+      alt="Cheerful shopper holding a basket filled with fresh vegetables"
+    />
+
+    <div class="newsletter-promotion__content">
+      <p class="newsletter-promotion__eyebrow">Fresh savings, delivered</p>
+      <h2>Subscribe to Our Newsletter</h2>
+      <p class="newsletter-promotion__copy">
+        Subscribe to our newsletter and save <strong>20% today</strong> with an exclusive discount
+        code.
+      </p>
+
+      <form (submit)="subscribe($event)">
+        <div class="newsletter-promotion__form-row">
+          <app-form-control
+            id="promotion-email"
+            label="Your email address"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            hideLabel
+            required
+            [formControl]="emailControl"
+            (valueChange)="clearFeedback()"
+          />
+          <app-button type="submit">Subscribe</app-button>
+        </div>
+
+        <app-feedback-message tone="success" [message]="feedback()" />
+      </form>
+
+      <label class="newsletter-promotion__preference">
+        <input type="checkbox" [checked]="doNotShowAgain()" (change)="updatePreference($event)" />
+        <span>Do not show this window again</span>
+      </label>
+    </div>
+  </div>
+</app-modal>

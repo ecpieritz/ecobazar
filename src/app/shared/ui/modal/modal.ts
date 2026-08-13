@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 
 export type OverlayCloseReason = 'backdrop' | 'close-button' | 'escape' | 'programmatic';
+export type ModalVariant = 'default' | 'promotion';
 
 let nextModalId = 0;
 
@@ -26,6 +27,7 @@ export class Modal {
   readonly closeLabel = input('Close dialog');
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
   readonly closeOnEscape = input(true, { transform: booleanAttribute });
+  readonly variant = input<ModalVariant>('default');
   readonly open = model(false);
 
   readonly closed = output<OverlayCloseReason>();
