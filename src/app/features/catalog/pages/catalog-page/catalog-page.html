@@ -1,0 +1,108 @@
+<div class="catalog container">
+  <header class="catalog__toolbar">
+    <button
+      class="catalog__filter-toggle"
+      type="button"
+      [attr.aria-expanded]="filtersExpanded()"
+      (click)="filtersExpanded.set(!filtersExpanded())"
+    >
+      Filters
+      @if (activeFilterCount()) {
+        <span>{{ activeFilterCount() }}</span>
+      }
+    </button>
+
+    <label class="catalog__sort">
+      <span>Sort by:</span>
+      <select [value]="filters().sort" (change)="changeSort($event)">
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </label>
+
+    <p aria-live="polite">
+      <strong>{{ state().pagination.totalItems }}</strong>
+      {{ state().pagination.totalItems === 1 ? 'result' : 'results' }} found
+    </p>
+  </header>
+
+  <div class="catalog__layout">
+    <app-catalog-filters
+      [categories]="categoryState().categories"
+      [categoriesLoading]="categoryState().status === 'loading'"
+      [filters]="filters()"
+      [activeCount]="activeFilterCount()"
+      [expanded]="filtersExpanded()"
+      (filtersChanged)="updateFilters($event)"
+      (filtersCleared)="clearFilters()"
+      (closeRequested)="filtersExpanded.set(false)"
+    />
+
+    <section class="catalog__results" aria-label="Products">
+      @switch (state().status) {
+        @case ('loading') {
+          <div class="product-grid" aria-busy="true" aria-label="Loading products">
+            @for (placeholder of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track placeholder) {
+              <div class="product-skeleton" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+            }
+          </div>
+        }
+        @case ('error') {
+          <div class="catalog-message" role="alert">
+            <h2>We could not load the products</h2>
+            <p>Please refresh the page and try again.</p>
+          </div>
+        }
+        @default {
+          @if (state().products.length) {
+            <div class="product-grid">
+              @for (product of state().products; track product.id) {
+                <app-product-card [product]="product" />
+              }
+            </div>
+          } @else {
+            <div class="catalog-message">
+              <h2>No products found</h2>
+              <p>Try removing a filter or choosing another category.</p>
+              <button type="button" (click)="clearFilters()">Clear filters</button>
+            </div>
+          }
+        }
+      }
+
+      @if (state().status === 'success' && state().pagination.totalPages > 1) {
+        <nav class="pagination" aria-label="Product pages">
+          <button
+            type="button"
+            aria-label="Previous page"
+            [disabled]="state().pagination.page === 1"
+            (click)="goToPage(state().pagination.page - 1)"
+          >
+            &larr;
+          </button>
+          @for (page of pageNumbers(); track page) {
+            <button
+              type="button"
+              [class.is-active]="page === state().pagination.page"
+              [attr.aria-current]="page === state().pagination.page ? 'page' : null"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+          <button
+            type="button"
+            aria-label="Next page"
+            [disabled]="state().pagination.page === state().pagination.totalPages"
+            (click)="goToPage(state().pagination.page + 1)"
+          >
+            &rarr;
+          </button>
+        </nav>
+      }
+    </section>
+  </div>
+</div>

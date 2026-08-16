@@ -54,6 +54,20 @@ describe('mockApiInterceptor', () => {
     expect(response.data.images).toHaveLength(4);
   });
 
+  it('should support sale and featured storefront filters', async () => {
+    const response = await firstValueFrom(
+      http.get<ProductListResponse>('/api/products?sale=true&featured=true&pageSize=100'),
+    );
+
+    expect(response.data.length).toBeGreaterThan(0);
+    expect(
+      response.data.every(
+        ({ compareAtPrice, featured, price }) =>
+          featured && (compareAtPrice?.amount ?? 0) > price.amount,
+      ),
+    ).toBe(true);
+  });
+
   it('should return categories and paginated product reviews', async () => {
     const [categories, reviews] = await Promise.all([
       firstValueFrom(http.get<CategoryListResponse>('/api/categories')),

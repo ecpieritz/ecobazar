@@ -82,15 +82,15 @@ const parseMinimumRating = (searchParams: URLSearchParams): Rating | undefined =
   return parsed as Rating;
 };
 
-const parseInStock = (searchParams: URLSearchParams): boolean | undefined => {
-  const value = searchParams.get('inStock');
+const parseOptionalBoolean = (searchParams: URLSearchParams, name: string): boolean | undefined => {
+  const value = searchParams.get(name);
 
   if (value === null) {
     return undefined;
   }
 
   if (value !== 'true' && value !== 'false') {
-    throw new InvalidQueryError('inStock must be true or false.');
+    throw new InvalidQueryError(`${name} must be true or false.`);
   }
 
   return value === 'true';
@@ -135,7 +135,9 @@ const listProducts = (request: HttpRequest<unknown>, url: URL): MockApiResult =>
     const minimumPrice = parseOptionalNumber(url.searchParams, 'minimumPrice');
     const maximumPrice = parseOptionalNumber(url.searchParams, 'maximumPrice');
     const minimumRating = parseMinimumRating(url.searchParams);
-    const inStock = parseInStock(url.searchParams);
+    const inStock = parseOptionalBoolean(url.searchParams, 'inStock');
+    const sale = parseOptionalBoolean(url.searchParams, 'sale');
+    const featured = parseOptionalBoolean(url.searchParams, 'featured');
     const sort = parseSort(url.searchParams);
     const search = url.searchParams.get('search')?.trim().toLocaleLowerCase() ?? '';
     const categoryValue = url.searchParams.get('category');
@@ -164,6 +166,9 @@ const listProducts = (request: HttpRequest<unknown>, url: URL): MockApiResult =>
         (maximumPrice === undefined || product.price.amount <= maximumPrice) &&
         (minimumRating === undefined || product.rating.average >= minimumRating) &&
         (inStock === undefined || product.inventory.quantity > 0 === inStock) &&
+        (sale === undefined ||
+          (product.compareAtPrice?.amount ?? 0) > product.price.amount === sale) &&
+        (featured === undefined || product.featured === featured) &&
         (tags.length === 0 || tags.every((tag) => product.tags.includes(tag)))
       );
     });

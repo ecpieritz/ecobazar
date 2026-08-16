@@ -74,6 +74,8 @@ describe('catalog repositories', () => {
         minimumRating: 4,
         tags: ['healthy', 'low-fat'],
         inStock: true,
+        sale: true,
+        featured: true,
         sort: 'price-ascending',
       }),
     );
@@ -92,6 +94,8 @@ describe('catalog repositories', () => {
     expect(request.request.params.get('minimumRating')).toBe('4');
     expect(request.request.params.getAll('tags')).toEqual(['healthy', 'low-fat']);
     expect(request.request.params.get('inStock')).toBe('true');
+    expect(request.request.params.get('sale')).toBe('true');
+    expect(request.request.params.get('featured')).toBe('true');
     expect(request.request.params.get('sort')).toBe('price-ascending');
     request.flush(response);
 

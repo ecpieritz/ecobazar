@@ -13,6 +13,8 @@ export interface ProductListQuery extends PaginationQuery {
   readonly minimumRating?: Rating;
   readonly tags?: readonly string[];
   readonly inStock?: boolean;
+  readonly sale?: boolean;
+  readonly featured?: boolean;
   readonly sort?: ProductSortOption;
 }
 

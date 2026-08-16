@@ -33,6 +33,14 @@ export const productListHttpParams = (query: ProductListQuery): HttpParams => {
     params = params.set('inStock', query.inStock);
   }
 
+  if (query.sale !== undefined) {
+    params = params.set('sale', query.sale);
+  }
+
+  if (query.featured !== undefined) {
+    params = params.set('featured', query.featured);
+  }
+
   if (query.sort !== undefined) {
     params = params.set('sort', query.sort);
   }

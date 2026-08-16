@@ -1,0 +1,148 @@
+<aside class="filters" [class.filters--expanded]="expanded()" aria-label="Product filters">
+  <header class="filters__header">
+    <div>
+      <h2>Filters</h2>
+      @if (activeCount()) {
+        <span>{{ activeCount() }} active</span>
+      }
+    </div>
+    <button type="button" aria-label="Close filters" (click)="closeRequested.emit()">
+      &times;
+    </button>
+  </header>
+
+  @if (activeCount()) {
+    <button class="filters__clear" type="button" (click)="filtersCleared.emit()">
+      Clear all filters
+    </button>
+  }
+
+  <fieldset>
+    <legend>All Categories</legend>
+    <label>
+      <input
+        type="radio"
+        name="category"
+        value=""
+        [checked]="filters().category === null"
+        (change)="selectCategory($event)"
+      />
+      <span>All products</span>
+    </label>
+
+    @if (categoriesLoading()) {
+      <p class="filters__message" aria-live="polite">Loading categories...</p>
+    } @else {
+      @for (category of categories(); track category.id) {
+        <label>
+          <input
+            type="radio"
+            name="category"
+            [value]="category.slug"
+            [checked]="filters().category === category.slug"
+            (change)="selectCategory($event)"
+          />
+          <span>{{ category.name }}</span>
+          <small>({{ category.productCount }})</small>
+        </label>
+      }
+    }
+  </fieldset>
+
+  <form class="price-filter" (submit)="applyPriceRange($event)">
+    <h3>Price</h3>
+    <div>
+      <label>
+        <span>Minimum</span>
+        <input
+          name="minimumPrice"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="$0"
+          [value]="filters().minimumPrice ?? ''"
+        />
+      </label>
+      <label>
+        <span>Maximum</span>
+        <input
+          name="maximumPrice"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="$100"
+          [value]="filters().maximumPrice ?? ''"
+        />
+      </label>
+    </div>
+    <button type="submit">Apply price</button>
+  </form>
+
+  <fieldset>
+    <legend>Rating</legend>
+    <label>
+      <input
+        type="radio"
+        name="rating"
+        value="0"
+        [checked]="filters().minimumRating === null"
+        (change)="selectRating($event)"
+      />
+      <span>All ratings</span>
+    </label>
+    @for (rating of ratings; track rating) {
+      <label>
+        <input
+          type="radio"
+          name="rating"
+          [value]="rating"
+          [checked]="filters().minimumRating === rating"
+          (change)="selectRating($event)"
+        />
+        <span class="filters__stars" [attr.aria-label]="rating + ' stars and up'">
+          <span aria-hidden="true">★★★★★</span>
+          <small>{{ rating }}.0 &amp; up</small>
+        </span>
+      </label>
+    }
+  </fieldset>
+
+  <fieldset>
+    <legend>Availability</legend>
+    <label>
+      <input type="checkbox" [checked]="filters().inStock" (change)="toggleAvailability($event)" />
+      <span>In stock</span>
+    </label>
+    <label>
+      <input type="checkbox" [checked]="filters().sale" (change)="toggleSale($event)" />
+      <span>On sale</span>
+    </label>
+    <label>
+      <input type="checkbox" [checked]="filters().featured" (change)="toggleFeatured($event)" />
+      <span>Featured</span>
+    </label>
+  </fieldset>
+
+  <section class="tag-filter" aria-labelledby="popular-tags-title">
+    <h3 id="popular-tags-title">Popular Tags</h3>
+    <div>
+      @for (tag of popularTags; track tag) {
+        <button
+          type="button"
+          [class.is-active]="filters().tags.includes(tag)"
+          [attr.aria-pressed]="filters().tags.includes(tag)"
+          (click)="toggleTag(tag)"
+        >
+          {{ tag }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <a class="sale-banner" routerLink="/shop" [queryParams]="{ sale: true }">
+    <span><strong>30%</strong> Discount</span>
+    <small>on selected produce</small>
+    <b>Shop now &rarr;</b>
+    <img src="/images/categories/vegetables.jpg" alt="" loading="lazy" />
+  </a>
+</aside>
