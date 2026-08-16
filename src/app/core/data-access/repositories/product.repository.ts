@@ -4,6 +4,8 @@ import { map, type Observable } from 'rxjs';
 
 import {
   API_ENDPOINTS,
+  type ProductFilterOptions,
+  type ProductFilterOptionsResponse,
   type ProductListQuery,
   type ProductListResponse,
   type ProductResponse,
@@ -21,6 +23,12 @@ export class ProductRepository {
     return this.http.get<ProductListResponse>(apiUrl(API_ENDPOINTS.products.collection), {
       params: productListHttpParams(query),
     });
+  }
+
+  getFilterOptions(): Observable<ProductFilterOptions> {
+    return this.http
+      .get<ProductFilterOptionsResponse>(apiUrl(API_ENDPOINTS.products.filterOptions))
+      .pipe(map(({ data }) => data));
   }
 
   getProductBySlug(slug: string): Observable<Product> {

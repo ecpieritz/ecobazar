@@ -23,9 +23,17 @@ describe('CatalogPage', () => {
       pagination: { page: 1, pageSize: 12, totalItems: 16, totalPages: 2 },
     }),
   );
+  const getFilterOptions = vi.fn().mockReturnValue(
+    of({
+      priceRange: { minimum: 9, maximum: 32, currency: 'USD' },
+      ratings: [{ value: 4, productCount: 12 }],
+      tags: [{ value: 'healthy', label: 'Healthy', productCount: 8 }],
+    }),
+  );
 
   beforeEach(async () => {
     getProducts.mockClear();
+    getFilterOptions.mockClear();
     queryParamMap.next(
       convertToParamMap({
         category: 'vegetables',
@@ -45,7 +53,7 @@ describe('CatalogPage', () => {
           provide: CategoryRepository,
           useValue: { getCategories: () => of(PRODUCT_CATEGORIES_FIXTURE) },
         },
-        { provide: ProductRepository, useValue: { getProducts } },
+        { provide: ProductRepository, useValue: { getProducts, getFilterOptions } },
       ],
     }).compileComponents();
   });
@@ -64,6 +72,7 @@ describe('CatalogPage', () => {
       sale: true,
       sort: 'price-ascending',
     });
+    expect(getFilterOptions).toHaveBeenCalledOnce();
     expect(element.querySelectorAll('.product-grid app-product-card')).toHaveLength(12);
     expect(element.querySelector('.catalog__toolbar p')?.textContent).toContain('16 results found');
     expect(element.querySelectorAll('.pagination button')).toHaveLength(4);

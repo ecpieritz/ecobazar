@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import type { ProductFilterOptions } from '@core/api';
 import type { ProductCategory, Rating } from '@core/domain';
 
-import {
-  type CatalogFilterPatch,
-  type CatalogFilters,
-  POPULAR_CATALOG_TAGS,
-} from './catalog-filter.model';
+import { type CatalogFilterPatch, type CatalogFilters } from './catalog-filter.model';
 
 const priceValue = (value: FormDataEntryValue | null): number | null => {
   const parsed = Number(value);
@@ -24,6 +21,8 @@ const priceValue = (value: FormDataEntryValue | null): number | null => {
 export class CatalogFiltersPanel {
   readonly categories = input.required<readonly ProductCategory[]>();
   readonly categoriesLoading = input(false);
+  readonly filterOptions = input.required<ProductFilterOptions>();
+  readonly filterOptionsLoading = input(false);
   readonly filters = input.required<CatalogFilters>();
   readonly activeCount = input(0);
   readonly expanded = input(false);
@@ -32,8 +31,7 @@ export class CatalogFiltersPanel {
   readonly filtersCleared = output<void>();
   readonly closeRequested = output<void>();
 
-  protected readonly popularTags = POPULAR_CATALOG_TAGS;
-  protected readonly ratings: readonly Rating[] = [5, 4, 3, 2, 1];
+  protected readonly stars = [1, 2, 3, 4, 5] as const;
 
   protected selectCategory(event: Event): void {
     const value = (event.target as HTMLInputElement).value;

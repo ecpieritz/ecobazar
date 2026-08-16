@@ -1,4 +1,11 @@
-import { EntityId, Product, ProductCategory, ProductReview, Rating } from '@core/domain';
+import {
+  CurrencyCode,
+  EntityId,
+  Product,
+  ProductCategory,
+  ProductReview,
+  Rating,
+} from '@core/domain';
 
 import { ApiResponse, PaginatedApiResponse, PaginationQuery } from './api.contracts';
 
@@ -27,8 +34,30 @@ export interface CreateReviewRequest {
   readonly comment: string;
 }
 
+export interface ProductFilterOption {
+  readonly value: string;
+  readonly label: string;
+  readonly productCount: number;
+}
+
+export interface ProductRatingFilterOption {
+  readonly value: Rating;
+  readonly productCount: number;
+}
+
+export interface ProductFilterOptions {
+  readonly priceRange: {
+    readonly minimum: number;
+    readonly maximum: number;
+    readonly currency: CurrencyCode;
+  };
+  readonly ratings: readonly ProductRatingFilterOption[];
+  readonly tags: readonly ProductFilterOption[];
+}
+
 export type ProductListResponse = PaginatedApiResponse<Product>;
 export type ProductResponse = ApiResponse<Product>;
+export type ProductFilterOptionsResponse = ApiResponse<ProductFilterOptions>;
 export type CategoryListResponse = ApiResponse<readonly ProductCategory[]>;
 export type ReviewListResponse = PaginatedApiResponse<ProductReview>;
 export type ReviewResponse = ApiResponse<ProductReview>;

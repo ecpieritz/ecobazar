@@ -3,7 +3,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, type ParamMap, type Params, Router } from '@angular/router';
 import { catchError, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
 
-import type { PaginationMeta, ProductListQuery, ProductSortOption } from '@core/api';
+import type {
+  PaginationMeta,
+  ProductFilterOptions,
+  ProductListQuery,
+  ProductSortOption,
+} from '@core/api';
 import { CategoryRepository, ProductRepository } from '@core/data-access';
 import type { Product, ProductCategory, Rating } from '@core/domain';
 import { ProductCard } from '@shared/ui';
@@ -17,6 +22,11 @@ const EMPTY_PAGINATION: PaginationMeta = {
   pageSize: PAGE_SIZE,
   totalItems: 0,
   totalPages: 0,
+};
+const EMPTY_FILTER_OPTIONS: ProductFilterOptions = {
+  priceRange: { minimum: 0, maximum: 100, currency: 'USD' },
+  ratings: ([5, 4, 3, 2, 1] as const).map((value) => ({ value, productCount: 0 })),
+  tags: [],
 };
 const SORT_OPTIONS: readonly ProductSortOption[] = [
   'featured',
@@ -47,6 +57,11 @@ type CategoryState =
   | { readonly status: 'loading'; readonly categories: readonly ProductCategory[] }
   | { readonly status: 'success'; readonly categories: readonly ProductCategory[] }
   | { readonly status: 'error'; readonly categories: readonly ProductCategory[] };
+
+type FilterOptionsState =
+  | { readonly status: 'loading'; readonly options: ProductFilterOptions }
+  | { readonly status: 'success'; readonly options: ProductFilterOptions }
+  | { readonly status: 'error'; readonly options: ProductFilterOptions };
 
 const numberParam = (params: ParamMap, name: string): number | null => {
   const rawValue = params.get(name);
@@ -129,6 +144,15 @@ export class CatalogPage {
       map((categories): CategoryState => ({ status: 'success', categories })),
       startWith<CategoryState>({ status: 'loading', categories: [] }),
       catchError(() => of<CategoryState>({ status: 'error', categories: [] })),
+    ),
+    { requireSync: true },
+  );
+
+  protected readonly filterOptionsState = toSignal(
+    this.productRepository.getFilterOptions().pipe(
+      map((options): FilterOptionsState => ({ status: 'success', options })),
+      startWith<FilterOptionsState>({ status: 'loading', options: EMPTY_FILTER_OPTIONS }),
+      catchError(() => of<FilterOptionsState>({ status: 'error', options: EMPTY_FILTER_OPTIONS })),
     ),
     { requireSync: true },
   );

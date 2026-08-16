@@ -25,14 +25,3 @@ export interface CatalogFilterPatch {
   readonly sale?: boolean | null;
   readonly featured?: boolean | null;
 }
-
-export const POPULAR_CATALOG_TAGS = [
-  'healthy',
-  'organic',
-  'fresh',
-  'cooking',
-  'vegetables',
-  'low-fat',
-  'spicy',
-  'capsicum',
-] as const;

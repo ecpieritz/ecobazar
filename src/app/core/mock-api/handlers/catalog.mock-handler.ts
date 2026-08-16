@@ -2,6 +2,8 @@ import { HttpRequest } from '@angular/common/http';
 
 import type {
   CategoryListResponse,
+  ProductFilterOptions,
+  ProductFilterOptionsResponse,
   ProductListResponse,
   ProductResponse,
   ProductSortOption,
@@ -126,6 +128,39 @@ const sortProducts = (products: readonly Product[], sort: ProductSortOption): Pr
           first.name.localeCompare(second.name),
       );
   }
+};
+
+const tagLabel = (tag: string): string =>
+  tag
+    .split('-')
+    .map((word) => word.charAt(0).toLocaleUpperCase() + word.slice(1))
+    .join(' ');
+
+const createFilterOptions = (): ProductFilterOptions => {
+  const prices = PRODUCTS_FIXTURE.map(({ price }) => price.amount);
+  const tagCounts = PRODUCTS_FIXTURE.flatMap(({ tags }) => tags).reduce<Map<string, number>>(
+    (counts, tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1),
+    new Map(),
+  );
+
+  return {
+    priceRange: {
+      minimum: Math.floor(Math.min(...prices)),
+      maximum: Math.ceil(Math.max(...prices)),
+      currency: 'USD',
+    },
+    ratings: ([5, 4, 3, 2, 1] as const).map((value) => ({
+      value,
+      productCount: PRODUCTS_FIXTURE.filter(({ rating }) => rating.average >= value).length,
+    })),
+    tags: [...tagCounts]
+      .map(([value, productCount]) => ({ value, label: tagLabel(value), productCount }))
+      .sort(
+        (first, second) =>
+          second.productCount - first.productCount || first.label.localeCompare(second.label),
+      )
+      .slice(0, 12),
+  };
 };
 
 const listProducts = (request: HttpRequest<unknown>, url: URL): MockApiResult => {
@@ -271,6 +306,11 @@ export const handleCatalogRequest = (
 
   if (segments.length === 1) {
     return listProducts(request, url);
+  }
+
+  if (segments.length === 2 && segments[1] === 'filter-options') {
+    const body: ProductFilterOptionsResponse = { data: createFilterOptions() };
+    return mockJsonResponse(request, body);
   }
 
   if (segments.length === 2) {

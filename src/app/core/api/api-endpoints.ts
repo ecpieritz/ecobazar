@@ -3,6 +3,7 @@ const encodePath = (value: string): string => encodeURIComponent(value);
 export const API_ENDPOINTS = {
   products: {
     collection: '/products',
+    filterOptions: '/products/filter-options',
     bySlug: (slug: string): string => `/products/${encodePath(slug)}`,
     reviews: (productId: string): string => `/products/${encodePath(productId)}/reviews`,
   },

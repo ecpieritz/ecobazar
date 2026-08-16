@@ -57,9 +57,10 @@
         <input
           name="minimumPrice"
           type="number"
-          min="0"
+          [min]="filterOptions().priceRange.minimum"
+          [max]="filterOptions().priceRange.maximum"
           step="0.01"
-          placeholder="$0"
+          [placeholder]="'$' + filterOptions().priceRange.minimum"
           [value]="filters().minimumPrice ?? ''"
         />
       </label>
@@ -68,13 +69,19 @@
         <input
           name="maximumPrice"
           type="number"
-          min="0"
+          [min]="filterOptions().priceRange.minimum"
+          [max]="filterOptions().priceRange.maximum"
           step="0.01"
-          placeholder="$100"
+          [placeholder]="'$' + filterOptions().priceRange.maximum"
           [value]="filters().maximumPrice ?? ''"
         />
       </label>
     </div>
+    <p class="price-filter__range">
+      Available range: ${{ filterOptions().priceRange.minimum }}–${{
+        filterOptions().priceRange.maximum
+      }}
+    </p>
     <button type="submit">Apply price</button>
   </form>
 
@@ -90,18 +97,22 @@
       />
       <span>All ratings</span>
     </label>
-    @for (rating of ratings; track rating) {
+    @for (option of filterOptions().ratings; track option.value) {
       <label>
         <input
           type="radio"
           name="rating"
-          [value]="rating"
-          [checked]="filters().minimumRating === rating"
+          [value]="option.value"
+          [checked]="filters().minimumRating === option.value"
           (change)="selectRating($event)"
         />
-        <span class="filters__stars" [attr.aria-label]="rating + ' stars and up'">
-          <span aria-hidden="true">★★★★★</span>
-          <small>{{ rating }}.0 &amp; up</small>
+        <span class="filters__stars" [attr.aria-label]="option.value + ' stars and up'">
+          <span aria-hidden="true">
+            @for (star of stars; track star) {
+              <i [class.is-muted]="star > option.value">&#9733;</i>
+            }
+          </span>
+          <small>{{ option.value }}.0 &amp; up ({{ option.productCount }})</small>
         </span>
       </label>
     }
@@ -125,18 +136,23 @@
 
   <section class="tag-filter" aria-labelledby="popular-tags-title">
     <h3 id="popular-tags-title">Popular Tags</h3>
-    <div>
-      @for (tag of popularTags; track tag) {
-        <button
-          type="button"
-          [class.is-active]="filters().tags.includes(tag)"
-          [attr.aria-pressed]="filters().tags.includes(tag)"
-          (click)="toggleTag(tag)"
-        >
-          {{ tag }}
-        </button>
-      }
-    </div>
+    @if (filterOptionsLoading()) {
+      <p class="filters__message" aria-live="polite">Loading tags...</p>
+    } @else {
+      <div>
+        @for (tag of filterOptions().tags; track tag.value) {
+          <button
+            type="button"
+            [class.is-active]="filters().tags.includes(tag.value)"
+            [attr.aria-pressed]="filters().tags.includes(tag.value)"
+            [attr.aria-label]="tag.label + ', ' + tag.productCount + ' products'"
+            (click)="toggleTag(tag.value)"
+          >
+            {{ tag.label }}
+          </button>
+        }
+      </div>
+    }
   </section>
 
   <a class="sale-banner" routerLink="/shop" [queryParams]="{ sale: true }">

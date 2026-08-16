@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import type {
   CategoryListResponse,
+  ProductFilterOptionsResponse,
   ProductListResponse,
   ProductResponse,
   ReviewListResponse,
@@ -52,6 +53,16 @@ describe('mockApiInterceptor', () => {
 
     expect(response.data.slug).toBe('chinese-cabbage');
     expect(response.data.images).toHaveLength(4);
+  });
+
+  it('should derive filter options from the product catalog', async () => {
+    const response = await firstValueFrom(
+      http.get<ProductFilterOptionsResponse>('/api/products/filter-options'),
+    );
+
+    expect(response.data.priceRange).toEqual({ minimum: 9, maximum: 32, currency: 'USD' });
+    expect(response.data.ratings).toHaveLength(5);
+    expect(response.data.tags[0]).toMatchObject({ value: 'vegetables', productCount: 13 });
   });
 
   it('should support sale and featured storefront filters', async () => {

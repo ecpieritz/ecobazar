@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import type {
   CategoryListResponse,
+  ProductFilterOptionsResponse,
   ProductListResponse,
   ProductResponse,
   ReviewListResponse,
@@ -111,6 +112,23 @@ describe('catalog repositories', () => {
     request.flush({ data: product } satisfies ProductResponse);
 
     await expect(resultPromise).resolves.toBe(product);
+  });
+
+  it('should fetch and unwrap product filter options', async () => {
+    const response: ProductFilterOptionsResponse = {
+      data: {
+        priceRange: { minimum: 9, maximum: 32, currency: 'USD' },
+        ratings: [{ value: 4, productCount: 12 }],
+        tags: [{ value: 'healthy', label: 'Healthy', productCount: 7 }],
+      },
+    };
+    const resultPromise = firstValueFrom(products.getFilterOptions());
+    const request = httpTesting.expectOne('/api/products/filter-options');
+
+    expect(request.request.method).toBe('GET');
+    request.flush(response);
+
+    await expect(resultPromise).resolves.toEqual(response.data);
   });
 
   it('should fetch paginated reviews for an encoded product identifier', async () => {
