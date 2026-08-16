@@ -95,4 +95,55 @@ describe('CatalogPage', () => {
       queryParamsHandling: 'merge',
     });
   });
+
+  it('stores sorting and page size changes in the URL', () => {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const sort = element.querySelector('.catalog__sort select') as HTMLSelectElement;
+    const pageSize = element.querySelector('.catalog__page-size select') as HTMLSelectElement;
+
+    sort.value = 'rating';
+    sort.dispatchEvent(new Event('change'));
+    pageSize.value = '24';
+    pageSize.dispatchEvent(new Event('change'));
+
+    expect(navigate).toHaveBeenNthCalledWith(1, [], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: { sort: 'rating', page: null },
+      queryParamsHandling: 'merge',
+    });
+    expect(navigate).toHaveBeenNthCalledWith(2, [], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: { pageSize: 24, page: null },
+      queryParamsHandling: 'merge',
+    });
+  });
+
+  it('uses ellipses for large page ranges while keeping nearby pages accessible', () => {
+    queryParamMap.next(convertToParamMap({ page: '10' }));
+    getProducts.mockReturnValueOnce(
+      of({
+        data: PRODUCTS_FIXTURE.slice(0, 12),
+        pagination: { page: 10, pageSize: 12, totalItems: 252, totalPages: 21 },
+      }),
+    );
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const pageLabels = [...element.querySelectorAll('.pagination button[aria-label^="Go to page"]')]
+      .map((button) => button.getAttribute('aria-label'))
+      .filter(Boolean);
+
+    expect(pageLabels).toEqual([
+      'Go to page 1',
+      'Go to page 9',
+      'Go to page 10',
+      'Go to page 11',
+      'Go to page 21',
+    ]);
+    expect(element.querySelectorAll('.pagination__ellipsis')).toHaveLength(2);
+  });
 });

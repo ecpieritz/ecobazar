@@ -12,14 +12,25 @@
       }
     </button>
 
-    <label class="catalog__sort">
-      <span>Sort by:</span>
-      <select [value]="filters().sort" (change)="changeSort($event)">
-        @for (option of sortOptions; track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select>
-    </label>
+    <div class="catalog__controls">
+      <label class="catalog__sort">
+        <span>Sort by:</span>
+        <select [value]="filters().sort" (change)="changeSort($event)">
+          @for (option of sortOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="catalog__page-size">
+        <span>Show:</span>
+        <select [value]="filters().pageSize" (change)="changePageSize($event)">
+          @for (pageSize of pageSizeOptions; track pageSize) {
+            <option [value]="pageSize">{{ pageSize }}</option>
+          }
+        </select>
+      </label>
+    </div>
 
     <p aria-live="polite">
       <strong>{{ state().pagination.totalItems }}</strong>
@@ -85,15 +96,20 @@
           >
             &larr;
           </button>
-          @for (page of pageNumbers(); track page) {
-            <button
-              type="button"
-              [class.is-active]="page === state().pagination.page"
-              [attr.aria-current]="page === state().pagination.page ? 'page' : null"
-              (click)="goToPage(page)"
-            >
-              {{ page }}
-            </button>
+          @for (item of paginationItems(); track $index) {
+            @if (isPageNumber(item)) {
+              <button
+                type="button"
+                [class.is-active]="item === state().pagination.page"
+                [attr.aria-current]="item === state().pagination.page ? 'page' : null"
+                [attr.aria-label]="'Go to page ' + item"
+                (click)="goToPage(item)"
+              >
+                {{ item }}
+              </button>
+            } @else {
+              <span class="pagination__ellipsis" aria-hidden="true">&hellip;</span>
+            }
           }
           <button
             type="button"

@@ -3,6 +3,7 @@ import type { Rating } from '@core/domain';
 
 export interface CatalogFilters {
   readonly page: number;
+  readonly pageSize: number;
   readonly search: string | null;
   readonly category: string | null;
   readonly minimumPrice: number | null;

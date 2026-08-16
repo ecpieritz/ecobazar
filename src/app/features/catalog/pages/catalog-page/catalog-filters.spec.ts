@@ -9,6 +9,7 @@ import { CatalogFiltersPanel } from './catalog-filters';
 
 const filters: CatalogFilters = {
   page: 1,
+  pageSize: 12,
   search: null,
   category: null,
   minimumPrice: null,

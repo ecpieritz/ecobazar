@@ -50,11 +50,19 @@
     }
   }
 
-  &__sort {
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    justify-self: end;
+  }
+
+  &__sort,
+  &__page-size {
     display: flex;
     gap: var(--space-2);
     align-items: center;
-    justify-self: end;
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
 
@@ -66,6 +74,10 @@
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
     }
+  }
+
+  &__page-size select {
+    padding-inline-end: var(--space-5);
   }
 
   &__layout {
@@ -162,6 +174,14 @@
       color: var(--color-text-subtle);
       background: var(--color-neutral-50);
     }
+  }
+
+  &__ellipsis {
+    display: grid;
+    width: 2rem;
+    height: 2.5rem;
+    place-items: center;
+    color: var(--color-text-subtle);
   }
 }
 

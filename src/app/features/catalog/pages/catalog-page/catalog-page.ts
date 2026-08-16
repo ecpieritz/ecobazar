@@ -17,6 +17,7 @@ import { type CatalogFilterPatch, type CatalogFilters } from './catalog-filter.m
 import { CatalogFiltersPanel } from './catalog-filters';
 
 const PAGE_SIZE = 12;
+const PAGE_SIZE_OPTIONS = [6, 12, 24] as const;
 const EMPTY_PAGINATION: PaginationMeta = {
   page: 1,
   pageSize: PAGE_SIZE,
@@ -35,6 +36,8 @@ const SORT_OPTIONS: readonly ProductSortOption[] = [
   'price-descending',
   'rating',
 ];
+
+type PaginationItem = number | 'ellipsis';
 
 type CatalogState =
   | {
@@ -71,6 +74,7 @@ const numberParam = (params: ParamMap, name: string): number | null => {
 
 const filtersFromParams = (params: ParamMap): CatalogFilters => {
   const page = Number(params.get('page'));
+  const requestedPageSize = Number(params.get('pageSize'));
   const rating = Number(params.get('minimumRating'));
   const sortValue = params.get('sort') as ProductSortOption | null;
   const tags = [
@@ -84,6 +88,9 @@ const filtersFromParams = (params: ParamMap): CatalogFilters => {
 
   return {
     page: Number.isInteger(page) && page > 0 ? page : 1,
+    pageSize: PAGE_SIZE_OPTIONS.includes(requestedPageSize as 6 | 12 | 24)
+      ? requestedPageSize
+      : PAGE_SIZE,
     search: params.get('search')?.trim() || null,
     category: params.get('category'),
     minimumPrice: numberParam(params, 'minimumPrice'),
@@ -100,7 +107,7 @@ const filtersFromParams = (params: ParamMap): CatalogFilters => {
 
 const productQuery = (filters: CatalogFilters): ProductListQuery => ({
   page: filters.page,
-  pageSize: PAGE_SIZE,
+  pageSize: filters.pageSize,
   sort: filters.sort,
   ...(filters.search ? { search: filters.search } : {}),
   ...(filters.category ? { category: filters.category } : {}),
@@ -127,6 +134,7 @@ export class CatalogPage {
   private readonly productRepository = inject(ProductRepository);
 
   protected readonly filtersExpanded = signal(false);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly sortOptions: readonly { value: ProductSortOption; label: string }[] = [
     { value: 'featured', label: 'Featured' },
     { value: 'newest', label: 'Newest' },
@@ -173,7 +181,11 @@ export class CatalogPage {
           startWith<CatalogState>({
             status: 'loading',
             products: [],
-            pagination: EMPTY_PAGINATION,
+            pagination: {
+              ...EMPTY_PAGINATION,
+              page: filters.page,
+              pageSize: filters.pageSize,
+            },
           }),
           catchError(() =>
             of<CatalogState>({
@@ -201,16 +213,40 @@ export class CatalogPage {
     );
   });
 
-  protected readonly pageNumbers = computed(() => {
+  protected readonly paginationItems = computed<readonly PaginationItem[]>(() => {
     const { page, totalPages } = this.state().pagination;
 
-    if (totalPages <= 5) {
+    if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, index) => index + 1);
     }
 
-    const start = Math.max(1, Math.min(page - 2, totalPages - 4));
-    return Array.from({ length: 5 }, (_, index) => start + index);
+    const visiblePages = new Set([1, totalPages, page - 1, page, page + 1]);
+
+    if (page <= 4) {
+      [2, 3, 4, 5].forEach((visiblePage) => visiblePages.add(visiblePage));
+    }
+
+    if (page >= totalPages - 3) {
+      [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1].forEach((visiblePage) =>
+        visiblePages.add(visiblePage),
+      );
+    }
+
+    const pages = [...visiblePages]
+      .filter((visiblePage) => visiblePage >= 1 && visiblePage <= totalPages)
+      .sort((first, second) => first - second);
+
+    return pages.flatMap<PaginationItem>((visiblePage, index) => {
+      const previousPage = pages[index - 1];
+      return previousPage !== undefined && visiblePage - previousPage > 1
+        ? ['ellipsis', visiblePage]
+        : [visiblePage];
+    });
   });
+
+  protected isPageNumber(item: PaginationItem): item is number {
+    return typeof item === 'number';
+  }
 
   protected updateFilters(patch: CatalogFilterPatch): void {
     const queryParams: Params = { page: null, ...patch };
@@ -246,6 +282,20 @@ export class CatalogPage {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { sort: sort === 'featured' ? null : sort, page: null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  protected changePageSize(event: Event): void {
+    const pageSize = Number((event.target as HTMLSelectElement).value);
+
+    if (!PAGE_SIZE_OPTIONS.includes(pageSize as 6 | 12 | 24)) {
+      return;
+    }
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { pageSize: pageSize === PAGE_SIZE ? null : pageSize, page: null },
       queryParamsHandling: 'merge',
     });
   }
