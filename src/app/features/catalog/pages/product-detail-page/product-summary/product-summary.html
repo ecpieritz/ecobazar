@@ -1,0 +1,129 @@
+<article class="summary">
+  <header class="summary__header">
+    <div class="summary__title-row">
+      <h1 [id]="'product-' + product().id">{{ product().name }}</h1>
+      <span class="summary__stock summary__stock--{{ product().inventory.status }}">
+        @switch (product().inventory.status) {
+          @case ('out-of-stock') {
+            Out of stock
+          }
+          @case ('low-stock') {
+            Low stock
+          }
+          @default {
+            In stock
+          }
+        }
+      </span>
+    </div>
+
+    <div class="summary__meta">
+      <app-rating [value]="product().rating.average" [count]="product().rating.count" />
+      <span aria-hidden="true">&bull;</span>
+      <span>SKU: {{ product().sku }}</span>
+    </div>
+
+    <div class="summary__prices">
+      @if (product().compareAtPrice; as compareAtPrice) {
+        <s>{{ compareAtPrice.amount | currency: compareAtPrice.currency }}</s>
+      }
+      <strong>{{ product().price.amount | currency: product().price.currency }}</strong>
+      @if (discount(); as discountPercentage) {
+        <span>{{ discountPercentage }}% off</span>
+      }
+      <small>/{{ unitLabel() }}</small>
+    </div>
+  </header>
+
+  <div class="summary__brand-row">
+    <p><span>Brand:</span> {{ product().brand.name }}</p>
+    <div class="summary__share" aria-label="Share this product">
+      <span>Share:</span>
+      <a
+        href="https://www.facebook.com"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Share on Facebook"
+        >f</a
+      >
+      <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="Share on X">x</a>
+      <a
+        href="https://www.pinterest.com"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Share on Pinterest"
+        >p</a
+      >
+    </div>
+  </div>
+
+  <p class="summary__description">{{ product().shortDescription }}</p>
+
+  <div class="summary__purchase">
+    <div class="summary__quantity" aria-label="Product quantity">
+      <button
+        type="button"
+        aria-label="Decrease quantity"
+        [disabled]="quantity() === 1 || unavailable()"
+        (click)="decreaseQuantity()"
+      >
+        &minus;
+      </button>
+      <input
+        type="number"
+        aria-label="Quantity"
+        min="1"
+        [max]="maximumQuantity()"
+        [value]="quantity()"
+        [disabled]="unavailable()"
+        (change)="changeQuantity($event)"
+      />
+      <button
+        type="button"
+        aria-label="Increase quantity"
+        [disabled]="quantity() === maximumQuantity() || unavailable()"
+        (click)="increaseQuantity()"
+      >
+        &plus;
+      </button>
+    </div>
+
+    <app-button
+      class="summary__add"
+      size="large"
+      fullWidth
+      [disabled]="unavailable()"
+      (pressed)="requestAddToCart()"
+    >
+      {{ unavailable() ? 'Unavailable' : 'Add to cart' }}
+    </app-button>
+
+    <button
+      class="summary__wishlist"
+      type="button"
+      [class.is-active]="wishlisted()"
+      [attr.aria-pressed]="wishlisted()"
+      [attr.aria-label]="(wishlisted() ? 'Remove ' : 'Add ') + product().name + ' from wishlist'"
+      (click)="toggleWishlist()"
+    >
+      <span aria-hidden="true">&#9825;</span>
+    </button>
+  </div>
+
+  <dl class="summary__taxonomy">
+    <div>
+      <dt>Category:</dt>
+      <dd>
+        @if (categoryRoute(); as route) {
+          <a [routerLink]="route" [queryParams]="categoryQuery()">{{ categoryName() }}</a>
+        } @else {
+          {{ categoryName() }}
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>Tags:</dt>
+      <dd>{{ product().tags.join(', ') }}</dd>
+    </div>
+  </dl>
+</article>

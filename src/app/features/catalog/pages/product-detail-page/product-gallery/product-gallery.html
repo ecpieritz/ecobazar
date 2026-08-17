@@ -1,0 +1,45 @@
+<div class="gallery" [attr.aria-label]="productName() + ' image gallery'">
+  @if (images().length > 1) {
+    <div class="gallery__thumbnails" role="list" aria-label="Product images">
+      @for (image of images(); track image.id; let index = $index) {
+        <button
+          type="button"
+          role="listitem"
+          [class.is-active]="index === selectedIndex()"
+          [attr.aria-label]="'Show ' + image.alt"
+          [attr.aria-current]="index === selectedIndex() ? 'true' : null"
+          (click)="selectImage(index)"
+        >
+          <img [src]="image.src" [alt]="image.alt" />
+        </button>
+      }
+    </div>
+  }
+
+  <figure class="gallery__stage">
+    @if (selectedImage(); as image) {
+      <img [src]="image.src" [alt]="image.alt" />
+    } @else {
+      <span>Image unavailable</span>
+    }
+
+    @if (images().length > 1) {
+      <button
+        class="gallery__arrow gallery__arrow--previous"
+        type="button"
+        [attr.aria-label]="'Show previous image of ' + productName()"
+        (click)="showPrevious()"
+      >
+        &larr;
+      </button>
+      <button
+        class="gallery__arrow gallery__arrow--next"
+        type="button"
+        [attr.aria-label]="'Show next image of ' + productName()"
+        (click)="showNext()"
+      >
+        &rarr;
+      </button>
+    }
+  </figure>
+</div>

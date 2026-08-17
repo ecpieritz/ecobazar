@@ -1,0 +1,63 @@
+<main class="product-detail container">
+  @switch (state().status) {
+    @case ('loading') {
+      <section class="product-detail__loading" aria-busy="true" aria-label="Loading product">
+        <span class="product-detail__image-skeleton"></span>
+        <div class="product-detail__content-skeleton" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </section>
+    }
+    @case ('error') {
+      <section class="product-detail__error">
+        <app-feedback-message
+          tone="error"
+          message="We could not find this product or load its details."
+        />
+        <a routerLink="/shop">Return to the shop</a>
+      </section>
+    }
+    @case ('success') {
+      @if (state().data; as data) {
+        <section
+          class="product-detail__overview"
+          [attr.aria-labelledby]="'product-' + data.product.id"
+        >
+          <app-product-gallery [images]="data.product.images" [productName]="data.product.name" />
+          <app-product-summary
+            [product]="data.product"
+            [categoryName]="data.category?.name ?? 'Uncategorized'"
+            [categorySlug]="data.category?.slug ?? null"
+            (addRequested)="showCartNotice($event)"
+          />
+        </section>
+
+        <div class="product-detail__notice">
+          <app-feedback-message
+            tone="success"
+            [message]="cartNotice()"
+            dismissible
+            (dismissed)="dismissCartNotice()"
+          />
+        </div>
+
+        <app-product-information
+          [product]="data.product"
+          [categoryName]="data.category?.name ?? 'Uncategorized'"
+          [reviews]="data.reviews"
+        />
+
+        @if (data.relatedProducts.length) {
+          <section class="product-detail__related" aria-labelledby="related-products-title">
+            <h2 id="related-products-title">Related products</h2>
+            <div class="product-detail__grid">
+              @for (product of data.relatedProducts; track product.id) {
+                <app-product-card [product]="product" />
+              }
+            </div>
+          </section>
+        }
+      }
+    }
+  }
+</main>

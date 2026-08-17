@@ -1,0 +1,127 @@
+<section class="information" aria-label="Product information">
+  <div class="information__tabs" role="tablist" aria-label="Product details">
+    <button
+      id="description-tab"
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'description'"
+      aria-controls="description-panel"
+      (click)="selectTab('description')"
+    >
+      Description
+    </button>
+    <button
+      id="details-tab"
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'details'"
+      aria-controls="details-panel"
+      (click)="selectTab('details')"
+    >
+      Additional information
+    </button>
+    <button
+      id="reviews-tab"
+      type="button"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'reviews'"
+      aria-controls="reviews-panel"
+      (click)="selectTab('reviews')"
+    >
+      Customer feedback ({{ reviews().length }})
+    </button>
+  </div>
+
+  @switch (activeTab()) {
+    @case ('details') {
+      <div
+        id="details-panel"
+        class="information__panel"
+        role="tabpanel"
+        aria-labelledby="details-tab"
+      >
+        <dl class="information__attributes">
+          <div>
+            <dt>SKU</dt>
+            <dd>{{ product().sku }}</dd>
+          </div>
+          <div>
+            <dt>Brand</dt>
+            <dd>{{ product().brand.name }}</dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd>{{ categoryName() }}</dd>
+          </div>
+          <div>
+            <dt>Stock status</dt>
+            <dd>{{ product().inventory.status }}</dd>
+          </div>
+          @for (attribute of product().attributes; track attribute.name) {
+            <div>
+              <dt>{{ attribute.name }}</dt>
+              <dd>{{ attribute.value }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+    }
+    @case ('reviews') {
+      <div
+        id="reviews-panel"
+        class="information__panel information__reviews"
+        role="tabpanel"
+        aria-labelledby="reviews-tab"
+      >
+        @for (review of reviews(); track review.id) {
+          <article class="review">
+            <div class="review__avatar" aria-hidden="true">
+              @if (review.author.avatarUrl; as avatarUrl) {
+                <img [src]="avatarUrl" alt="" />
+              } @else {
+                {{ review.author.name.charAt(0) }}
+              }
+            </div>
+            <div>
+              <header>
+                <div>
+                  <h3>{{ review.author.name }}</h3>
+                  <app-rating size="small" [value]="review.rating" [showCount]="false" />
+                </div>
+                <time [attr.datetime]="review.createdAt">
+                  {{ review.createdAt | date: 'mediumDate' }}
+                </time>
+              </header>
+              <p>{{ review.comment }}</p>
+            </div>
+          </article>
+        } @empty {
+          <p class="information__empty">There are no reviews for this product yet.</p>
+        }
+      </div>
+    }
+    @default {
+      <div
+        id="description-panel"
+        class="information__panel information__description"
+        role="tabpanel"
+        aria-labelledby="description-tab"
+      >
+        <div>
+          <h2>Freshness you can taste</h2>
+          <p>{{ product().description }}</p>
+          <p>
+            Every order is selected with care and packed to help protect the product during
+            delivery.
+          </p>
+        </div>
+        <ul role="list">
+          <li><span aria-hidden="true">&#10003;</span> Carefully selected produce</li>
+          <li><span aria-hidden="true">&#10003;</span> Quality checked before packing</li>
+          <li><span aria-hidden="true">&#10003;</span> Stored under suitable conditions</li>
+          <li><span aria-hidden="true">&#10003;</span> Mock checkout with no real payment</li>
+        </ul>
+      </div>
+    }
+  }
+</section>
