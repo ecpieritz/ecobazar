@@ -1,32 +1,41 @@
 <section class="information" aria-label="Product information">
   <div class="information__tabs" role="tablist" aria-label="Product details">
     <button
+      #tabButton
       id="description-tab"
       type="button"
       role="tab"
       [attr.aria-selected]="activeTab() === 'description'"
+      [attr.tabindex]="activeTab() === 'description' ? 0 : -1"
       aria-controls="description-panel"
       (click)="selectTab('description')"
+      (keydown)="handleTabKeydown($event, 'description')"
     >
       Description
     </button>
     <button
+      #tabButton
       id="details-tab"
       type="button"
       role="tab"
       [attr.aria-selected]="activeTab() === 'details'"
+      [attr.tabindex]="activeTab() === 'details' ? 0 : -1"
       aria-controls="details-panel"
       (click)="selectTab('details')"
+      (keydown)="handleTabKeydown($event, 'details')"
     >
       Additional information
     </button>
     <button
+      #tabButton
       id="reviews-tab"
       type="button"
       role="tab"
       [attr.aria-selected]="activeTab() === 'reviews'"
+      [attr.tabindex]="activeTab() === 'reviews' ? 0 : -1"
       aria-controls="reviews-panel"
       (click)="selectTab('reviews')"
+      (keydown)="handleTabKeydown($event, 'reviews')"
     >
       Customer feedback ({{ reviews().length }})
     </button>
@@ -73,7 +82,7 @@
         role="tabpanel"
         aria-labelledby="reviews-tab"
       >
-        @for (review of reviews(); track review.id) {
+        @for (review of visibleReviews(); track review.id) {
           <article class="review">
             <div class="review__avatar" aria-hidden="true">
               @if (review.author.avatarUrl; as avatarUrl) {
@@ -97,6 +106,18 @@
           </article>
         } @empty {
           <p class="information__empty">There are no reviews for this product yet.</p>
+        }
+
+        @if (hasMoreReviews()) {
+          <app-button
+            class="information__load-more"
+            variant="secondary"
+            size="small"
+            accessibleLabel="Load more customer reviews"
+            (pressed)="loadMoreReviews()"
+          >
+            Load more
+          </app-button>
         }
       </div>
     }

@@ -45,6 +45,8 @@
           [product]="data.product"
           [categoryName]="data.category?.name ?? 'Uncategorized'"
           [reviews]="data.reviews"
+          [activeTab]="informationTab()"
+          (tabChanged)="changeInformationTab($event)"
         />
 
         @if (data.relatedProducts.length) {

@@ -112,6 +112,10 @@
   &__empty {
     color: var(--color-text-muted);
   }
+
+  &__load-more {
+    justify-self: start;
+  }
 }
 
 .review {
