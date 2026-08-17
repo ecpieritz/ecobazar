@@ -71,6 +71,9 @@ describe('CatalogFiltersPanel', () => {
     expect(element.querySelectorAll('.tag-filter button')).toHaveLength(2);
     expect(element.querySelector('.price-filter__range')?.textContent).toContain('$9–$32');
     expect(element.querySelector('input[name="minimumPrice"]')?.getAttribute('min')).toBe('9');
+    expect(element.querySelector('input[value="vegetables"]')?.getAttribute('name')).toBe(
+      'category-catalog',
+    );
     expect(element.querySelector('.sale-banner')?.getAttribute('href')).toBe('/shop?sale=true');
   });
 

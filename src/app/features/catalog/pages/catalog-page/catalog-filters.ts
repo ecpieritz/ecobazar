@@ -25,11 +25,11 @@ export class CatalogFiltersPanel {
   readonly filterOptionsLoading = input(false);
   readonly filters = input.required<CatalogFilters>();
   readonly activeCount = input(0);
-  readonly expanded = input(false);
+  readonly headingVisible = input(true);
+  readonly controlNamespace = input('catalog');
 
   readonly filtersChanged = output<CatalogFilterPatch>();
   readonly filtersCleared = output<void>();
-  readonly closeRequested = output<void>();
 
   protected readonly stars = [1, 2, 3, 4, 5] as const;
 

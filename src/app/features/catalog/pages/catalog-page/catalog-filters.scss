@@ -5,29 +5,11 @@
 }
 
 .filters {
-  display: none;
-
-  &--expanded {
-    position: fixed;
-    z-index: var(--z-index-overlay);
-    inset: 0;
-    display: block;
-    padding: var(--space-6);
-    overflow: auto;
-    background: var(--color-surface);
-  }
-
   &__header {
     display: flex;
+    gap: var(--space-2);
     align-items: center;
-    justify-content: space-between;
     margin-block-end: var(--space-4);
-
-    > div {
-      display: flex;
-      gap: var(--space-2);
-      align-items: center;
-    }
 
     h2 {
       font-size: var(--font-size-xl);
@@ -36,13 +18,6 @@
     span {
       color: var(--color-primary);
       font-size: var(--font-size-xs);
-    }
-
-    button {
-      padding: var(--space-2);
-      font-size: var(--font-size-2xl);
-      background: transparent;
-      border: 0;
     }
   }
 
@@ -202,15 +177,5 @@
     width: 100%;
     height: 55%;
     object-fit: cover;
-  }
-}
-
-@include from(lg) {
-  .filters {
-    display: block;
-
-    &__header button {
-      display: none;
-    }
   }
 }

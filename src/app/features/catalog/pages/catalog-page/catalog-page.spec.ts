@@ -7,6 +7,25 @@ import { PRODUCT_CATEGORIES_FIXTURE, PRODUCTS_FIXTURE } from '@core/mock-api/fix
 
 import { CatalogPage } from './catalog-page';
 
+const installDialogPolyfill = (): void => {
+  Object.defineProperties(HTMLDialogElement.prototype, {
+    showModal: {
+      configurable: true,
+      value(this: HTMLDialogElement): void {
+        this.open = true;
+      },
+    },
+    close: {
+      configurable: true,
+      value(this: HTMLDialogElement, returnValue = ''): void {
+        this.returnValue = returnValue;
+        this.open = false;
+        this.dispatchEvent(new Event('close'));
+      },
+    },
+  });
+};
+
 describe('CatalogPage', () => {
   const queryParamMap = new BehaviorSubject(
     convertToParamMap({
@@ -30,6 +49,8 @@ describe('CatalogPage', () => {
       tags: [{ value: 'healthy', label: 'Healthy', productCount: 8 }],
     }),
   );
+
+  beforeAll(installDialogPolyfill);
 
   beforeEach(async () => {
     getProducts.mockClear();
@@ -170,5 +191,58 @@ describe('CatalogPage', () => {
       queryParams: { page: null, search: null },
       queryParamsHandling: 'merge',
     });
+  });
+
+  it('opens the responsive filter drawer and keeps it open while combining filters', () => {
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const toggle = element.querySelector('.catalog__filter-toggle') as HTMLButtonElement;
+
+    toggle.click();
+    fixture.detectChanges();
+    const dialog = element.querySelector('dialog.drawer') as HTMLDialogElement;
+    const drawerCategory = dialog.querySelector(
+      'input[name="category-drawer"][value="fresh-fruit"]',
+    ) as HTMLInputElement;
+
+    expect(dialog.open).toBe(true);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(dialog.classList).toContain('drawer--start');
+
+    drawerCategory.click();
+    fixture.detectChanges();
+
+    expect(dialog.open).toBe(true);
+    expect(router.navigate).toHaveBeenCalledWith([], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: { page: null, category: 'fresh-fruit' },
+      queryParamsHandling: 'merge',
+    });
+
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+    fixture.detectChanges();
+
+    expect(dialog.open).toBe(false);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('closes an open filter drawer at the desktop breakpoint', () => {
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const toggle = element.querySelector('.catalog__filter-toggle') as HTMLButtonElement;
+    const originalWidth = window.innerWidth;
+
+    toggle.click();
+    fixture.detectChanges();
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
+    window.dispatchEvent(new Event('resize'));
+    fixture.detectChanges();
+
+    expect((element.querySelector('dialog.drawer') as HTMLDialogElement).open).toBe(false);
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
   });
 });

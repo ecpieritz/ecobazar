@@ -1,15 +1,12 @@
-<aside class="filters" [class.filters--expanded]="expanded()" aria-label="Product filters">
-  <header class="filters__header">
-    <div>
+<section class="filters" aria-label="Product filters">
+  @if (headingVisible()) {
+    <header class="filters__header">
       <h2>Filters</h2>
       @if (activeCount()) {
         <span>{{ activeCount() }} active</span>
       }
-    </div>
-    <button type="button" aria-label="Close filters" (click)="closeRequested.emit()">
-      &times;
-    </button>
-  </header>
+    </header>
+  }
 
   @if (activeCount()) {
     <button class="filters__clear" type="button" (click)="filtersCleared.emit()">
@@ -22,7 +19,7 @@
     <label>
       <input
         type="radio"
-        name="category"
+        [name]="'category-' + controlNamespace()"
         value=""
         [checked]="filters().category === null"
         (change)="selectCategory($event)"
@@ -37,7 +34,7 @@
         <label>
           <input
             type="radio"
-            name="category"
+            [name]="'category-' + controlNamespace()"
             [value]="category.slug"
             [checked]="filters().category === category.slug"
             (change)="selectCategory($event)"
@@ -90,7 +87,7 @@
     <label>
       <input
         type="radio"
-        name="rating"
+        [name]="'rating-' + controlNamespace()"
         value="0"
         [checked]="filters().minimumRating === null"
         (change)="selectRating($event)"
@@ -101,7 +98,7 @@
       <label>
         <input
           type="radio"
-          name="rating"
+          [name]="'rating-' + controlNamespace()"
           [value]="option.value"
           [checked]="filters().minimumRating === option.value"
           (change)="selectRating($event)"
@@ -161,4 +158,4 @@
     <b>Shop now &rarr;</b>
     <img src="/images/categories/vegetables.jpg" alt="" loading="lazy" />
   </a>
-</aside>
+</section>

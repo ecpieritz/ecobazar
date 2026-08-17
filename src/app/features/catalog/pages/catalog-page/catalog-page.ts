@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  HostListener,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, type ParamMap, type Params, Router } from '@angular/router';
 import { catchError, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
@@ -11,7 +18,7 @@ import type {
 } from '@core/api';
 import { CategoryRepository, ProductRepository } from '@core/data-access';
 import type { Product, ProductCategory, Rating } from '@core/domain';
-import { ProductCard } from '@shared/ui';
+import { Button, Drawer, ProductCard } from '@shared/ui';
 
 import { type CatalogFilterPatch, type CatalogFilters } from './catalog-filter.model';
 import { CatalogFiltersPanel } from './catalog-filters';
@@ -122,7 +129,7 @@ const productQuery = (filters: CatalogFilters): ProductListQuery => ({
 
 @Component({
   selector: 'app-catalog-page',
-  imports: [CatalogFiltersPanel, ProductCard],
+  imports: [Button, CatalogFiltersPanel, Drawer, ProductCard],
   templateUrl: './catalog-page.html',
   styleUrl: './catalog-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -256,7 +263,6 @@ export class CatalogPage {
       queryParams,
       queryParamsHandling: 'merge',
     });
-    this.filtersExpanded.set(false);
   }
 
   protected clearFilters(): void {
@@ -276,6 +282,9 @@ export class CatalogPage {
       },
       queryParamsHandling: 'merge',
     });
+  }
+
+  protected closeFilterDrawer(): void {
     this.filtersExpanded.set(false);
   }
 
@@ -316,5 +325,14 @@ export class CatalogPage {
       queryParams: { page: page === 1 ? null : page },
       queryParamsHandling: 'merge',
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  protected closeFilterDrawerAtDesktopBreakpoint(event: Event): void {
+    const viewport = event.target as Window | null;
+
+    if ((viewport?.innerWidth ?? 0) >= 992) {
+      this.closeFilterDrawer();
+    }
   }
 }

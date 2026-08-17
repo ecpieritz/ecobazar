@@ -3,6 +3,7 @@
     <button
       class="catalog__filter-toggle"
       type="button"
+      aria-haspopup="dialog"
       [attr.aria-expanded]="filtersExpanded()"
       (click)="filtersExpanded.set(!filtersExpanded())"
     >
@@ -50,18 +51,19 @@
   }
 
   <div class="catalog__layout">
-    <app-catalog-filters
-      [categories]="categoryState().categories"
-      [categoriesLoading]="categoryState().status === 'loading'"
-      [filterOptions]="filterOptionsState().options"
-      [filterOptionsLoading]="filterOptionsState().status === 'loading'"
-      [filters]="filters()"
-      [activeCount]="activeFilterCount()"
-      [expanded]="filtersExpanded()"
-      (filtersChanged)="updateFilters($event)"
-      (filtersCleared)="clearFilters()"
-      (closeRequested)="filtersExpanded.set(false)"
-    />
+    <aside class="catalog__desktop-filters" aria-label="Catalog filters">
+      <app-catalog-filters
+        controlNamespace="desktop"
+        [categories]="categoryState().categories"
+        [categoriesLoading]="categoryState().status === 'loading'"
+        [filterOptions]="filterOptionsState().options"
+        [filterOptionsLoading]="filterOptionsState().status === 'loading'"
+        [filters]="filters()"
+        [activeCount]="activeFilterCount()"
+        (filtersChanged)="updateFilters($event)"
+        (filtersCleared)="clearFilters()"
+      />
+    </aside>
 
     <section class="catalog__results" aria-label="Products">
       @switch (state().status) {
@@ -135,3 +137,39 @@
     </section>
   </div>
 </div>
+
+<app-drawer
+  title="Product filters"
+  [description]="
+    activeFilterCount()
+      ? activeFilterCount() + ' active filters'
+      : 'Refine the products shown in the catalog'
+  "
+  placement="start"
+  size="small"
+  closeLabel="Close product filters"
+  [(open)]="filtersExpanded"
+>
+  <app-catalog-filters
+    controlNamespace="drawer"
+    [headingVisible]="false"
+    [categories]="categoryState().categories"
+    [categoriesLoading]="categoryState().status === 'loading'"
+    [filterOptions]="filterOptionsState().options"
+    [filterOptionsLoading]="filterOptionsState().status === 'loading'"
+    [filters]="filters()"
+    [activeCount]="activeFilterCount()"
+    (filtersChanged)="updateFilters($event)"
+    (filtersCleared)="clearFilters()"
+  />
+
+  @if (activeFilterCount()) {
+    <app-button drawerActions variant="secondary" size="medium" (pressed)="clearFilters()">
+      Clear all
+    </app-button>
+  }
+  <app-button drawerActions variant="primary" size="medium" (pressed)="closeFilterDrawer()">
+    Show {{ state().pagination.totalItems }}
+    {{ state().pagination.totalItems === 1 ? 'result' : 'results' }}
+  </app-button>
+</app-drawer>

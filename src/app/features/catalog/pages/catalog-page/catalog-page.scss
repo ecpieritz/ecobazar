@@ -76,13 +76,13 @@
     }
   }
 
-  &__page-size select {
-    padding-inline-end: var(--space-5);
-  }
-
   &__layout {
     display: grid;
     gap: var(--space-8);
+  }
+
+  &__desktop-filters {
+    display: none;
   }
 
   &__search-summary {
@@ -231,11 +231,15 @@
 @include from(lg) {
   .catalog {
     &__filter-toggle {
-      visibility: hidden;
+      display: none;
     }
 
     &__layout {
       grid-template-columns: 15rem minmax(0, 1fr);
+    }
+
+    &__desktop-filters {
+      display: block;
     }
   }
 }
