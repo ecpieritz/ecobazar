@@ -6,7 +6,7 @@ import { catchError, distinctUntilChanged, forkJoin, map, of, startWith, switchM
 
 import { CategoryRepository, ProductRepository, ReviewRepository } from '@core/data-access';
 import type { Product, ProductCategory, ProductReview } from '@core/domain';
-import { FeedbackMessage, ProductCard } from '@shared/ui';
+import { FeedbackMessage } from '@shared/ui';
 
 import { ProductGallery } from './product-gallery/product-gallery';
 import {
@@ -14,6 +14,8 @@ import {
   type ProductInformationTab,
 } from './product-information/product-information';
 import { ProductSummary, type ProductCartSelection } from './product-summary/product-summary';
+import { ProductRecommendationService } from './related-products/product-recommendation.service';
+import { RelatedProducts } from './related-products/related-products';
 
 interface ProductDetailData {
   readonly product: Product;
@@ -34,10 +36,10 @@ const INFORMATION_TABS: readonly ProductInformationTab[] = ['description', 'deta
   selector: 'app-product-detail-page',
   imports: [
     FeedbackMessage,
-    ProductCard,
     ProductGallery,
     ProductInformation,
     ProductSummary,
+    RelatedProducts,
     RouterLink,
   ],
   templateUrl: './product-detail-page.html',
@@ -51,6 +53,7 @@ export class ProductDetailPage {
   private readonly productRepository = inject(ProductRepository);
   private readonly categoryRepository = inject(CategoryRepository);
   private readonly reviewRepository = inject(ReviewRepository);
+  private readonly recommendationService = inject(ProductRecommendationService);
 
   protected readonly cartNotice = signal<string | null>(null);
   protected readonly informationTab = toSignal(
@@ -82,20 +85,19 @@ export class ProductDetailPage {
                 page: 1,
                 pageSize: 100,
               }),
-              related: this.productRepository.getProducts({
-                category: product.categoryId,
+              catalog: this.productRepository.getProducts({
                 page: 1,
-                pageSize: 5,
+                pageSize: 100,
                 sort: 'featured',
               }),
             }).pipe(
-              map(({ categories, related, reviews }): ProductDetailState => ({
+              map(({ catalog, categories, reviews }): ProductDetailState => ({
                 status: 'success',
                 data: {
                   product,
                   category: categories.find(({ id }) => id === product.categoryId) ?? null,
                   reviews: reviews.data,
-                  relatedProducts: related.data.filter(({ id }) => id !== product.id).slice(0, 4),
+                  relatedProducts: this.recommendationService.recommend(product, catalog.data, 4),
                 },
               })),
             ),

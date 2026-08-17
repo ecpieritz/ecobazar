@@ -14,9 +14,6 @@ import { ProductDetailPage } from './product-detail-page';
 
 describe('ProductDetailPage', () => {
   const product = PRODUCTS_FIXTURE.find(({ slug }) => slug === 'chinese-cabbage')!;
-  const relatedProducts = PRODUCTS_FIXTURE.filter(
-    ({ categoryId }) => categoryId === product.categoryId,
-  ).slice(0, 5);
   const reviews = PRODUCT_REVIEWS_FIXTURE.filter(({ productId }) => productId === product.id);
   const paramMap = new BehaviorSubject(convertToParamMap({ slug: product.slug }));
   const queryParamMap = new BehaviorSubject(convertToParamMap({}));
@@ -30,8 +27,13 @@ describe('ProductDetailPage', () => {
     getProductBySlug.mockReset().mockReturnValue(of(product));
     getProducts.mockReset().mockReturnValue(
       of({
-        data: relatedProducts,
-        pagination: { page: 1, pageSize: 5, totalItems: relatedProducts.length, totalPages: 1 },
+        data: PRODUCTS_FIXTURE,
+        pagination: {
+          page: 1,
+          pageSize: 100,
+          totalItems: PRODUCTS_FIXTURE.length,
+          totalPages: 1,
+        },
       }),
     );
     getProductReviews.mockReset().mockReturnValue(
@@ -66,9 +68,8 @@ describe('ProductDetailPage', () => {
 
     expect(getProductBySlug).toHaveBeenCalledWith('chinese-cabbage');
     expect(getProducts).toHaveBeenCalledWith({
-      category: product.categoryId,
       page: 1,
-      pageSize: 5,
+      pageSize: 100,
       sort: 'featured',
     });
     expect(getProductReviews).toHaveBeenCalledWith({
@@ -77,7 +78,7 @@ describe('ProductDetailPage', () => {
       pageSize: 100,
     });
     expect(element.querySelector('h1')?.textContent).toContain(product.name);
-    expect(element.querySelectorAll('.product-detail__grid app-product-card')).toHaveLength(4);
+    expect(element.querySelectorAll('app-related-products app-product-card')).toHaveLength(4);
     expect(TestBed.inject(Title).getTitle()).toBe(`${product.name} | Ecobazar`);
   });
 

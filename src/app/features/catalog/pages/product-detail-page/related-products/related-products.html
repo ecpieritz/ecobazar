@@ -1,0 +1,14 @@
+@if (products().length) {
+  <section class="recommendations" aria-labelledby="related-products-title">
+    <header>
+      <p>More fresh picks</p>
+      <h2 id="related-products-title">{{ heading() }}</h2>
+    </header>
+
+    <div class="recommendations__grid">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  </section>
+}

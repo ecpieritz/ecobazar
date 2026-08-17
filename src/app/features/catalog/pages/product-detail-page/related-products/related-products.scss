@@ -1,0 +1,40 @@
+@use 'abstracts' as *;
+
+:host {
+  display: block;
+}
+
+.recommendations {
+  padding-block-start: var(--space-16);
+
+  header {
+    margin-block-end: var(--space-8);
+    text-align: center;
+
+    p {
+      margin-block-end: var(--space-1);
+      color: var(--color-primary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-size: var(--font-size-3xl);
+      text-transform: capitalize;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+}
+
+@include from(md) {
+  .recommendations__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
