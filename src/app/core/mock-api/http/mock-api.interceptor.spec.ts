@@ -46,6 +46,15 @@ describe('mockApiInterceptor', () => {
     expect(response.data[1].name).toBe('Green Capsicum');
   });
 
+  it('should search products by name without case sensitivity', async () => {
+    const response = await firstValueFrom(
+      http.get<ProductListResponse>('/api/products?search=GREEN%20APPLE'),
+    );
+
+    expect(response.data).toHaveLength(1);
+    expect(response.data[0].slug).toBe('green-apple');
+  });
+
   it('should return a product by slug', async () => {
     const response = await firstValueFrom(
       http.get<ProductResponse>('/api/products/chinese-cabbage'),

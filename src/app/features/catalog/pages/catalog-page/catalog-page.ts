@@ -203,6 +203,7 @@ export class CatalogPage {
   protected readonly activeFilterCount = computed(() => {
     const filters = this.filters();
     return (
+      Number(filters.search !== null) +
       Number(filters.category !== null) +
       Number(filters.minimumPrice !== null || filters.maximumPrice !== null) +
       Number(filters.minimumRating !== null) +
@@ -263,6 +264,7 @@ export class CatalogPage {
       relativeTo: this.route,
       queryParams: {
         page: null,
+        search: null,
         category: null,
         minimumPrice: null,
         maximumPrice: null,
@@ -284,6 +286,10 @@ export class CatalogPage {
       queryParams: { sort: sort === 'featured' ? null : sort, page: null },
       queryParamsHandling: 'merge',
     });
+  }
+
+  protected clearSearch(): void {
+    this.updateFilters({ search: null });
   }
 
   protected changePageSize(event: Event): void {

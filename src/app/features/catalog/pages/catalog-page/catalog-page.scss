@@ -85,6 +85,35 @@
     gap: var(--space-8);
   }
 
+  &__search-summary {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    margin-block: calc(var(--space-2) * -1) var(--space-6);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    background: var(--color-primary-subtle);
+    border-radius: var(--radius-md);
+
+    p {
+      margin: 0;
+    }
+
+    strong {
+      color: var(--color-text);
+    }
+
+    button {
+      padding: 0;
+      color: var(--color-primary);
+      font-weight: var(--font-weight-semibold);
+      background: transparent;
+      border: 0;
+    }
+  }
+
   &__results {
     min-width: 0;
   }

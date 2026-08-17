@@ -146,4 +146,29 @@ describe('CatalogPage', () => {
     ]);
     expect(element.querySelectorAll('.pagination__ellipsis')).toHaveLength(2);
   });
+
+  it('loads and clears a global search from the URL', () => {
+    queryParamMap.next(convertToParamMap({ search: 'green apple' }));
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(getProducts).toHaveBeenCalledWith({
+      page: 1,
+      pageSize: 12,
+      search: 'green apple',
+      sort: 'featured',
+    });
+    expect(element.querySelector('.catalog__search-summary')?.textContent).toContain('green apple');
+
+    (element.querySelector('[aria-label="Clear product search"]') as HTMLButtonElement).click();
+
+    expect(navigate).toHaveBeenCalledWith([], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: { page: null, search: null },
+      queryParamsHandling: 'merge',
+    });
+  });
 });

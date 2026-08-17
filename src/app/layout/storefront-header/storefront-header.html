@@ -58,15 +58,12 @@
         <span>Ecobazar</span>
       </a>
 
-      <form class="search search--desktop" role="search" (submit)="preventSearchNavigation($event)">
-        <label class="visually-hidden" for="desktop-store-search">Search products</label>
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="7" />
-          <path d="m16 16 4 4" />
-        </svg>
-        <input id="desktop-store-search" name="search" type="search" placeholder="Search" />
-        <button type="submit">Search</button>
-      </form>
+      <app-storefront-search
+        class="search--desktop"
+        controlId="desktop-store-search"
+        [initialQuery]="searchTerm()"
+        (searchSubmitted)="searchProducts($event)"
+      />
 
       <div class="header-actions">
         <a class="icon-link" routerLink="/wishlist" aria-label="Wishlist">
@@ -96,7 +93,9 @@
 
   <app-storefront-navigation
     [isOpen]="isMenuOpen()"
+    [searchTerm]="searchTerm()"
     (dismissed)="closeMenu()"
     (navigated)="closeMenu()"
+    (searchRequested)="searchProducts($event)"
   />
 </header>

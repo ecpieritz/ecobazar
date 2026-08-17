@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { StorefrontHeader } from './storefront-header';
 
@@ -91,5 +91,23 @@ describe('StorefrontHeader', () => {
 
     expect(toggle.attributes['aria-expanded']).toBe('false');
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
+  });
+
+  it('should navigate desktop searches to the filtered product catalog', () => {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const search = element.querySelector('.search--desktop input') as HTMLInputElement;
+    const form = element.querySelector('.search--desktop form') as HTMLFormElement;
+
+    search.value = 'green apple';
+    search.dispatchEvent(new Event('input'));
+    form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+
+    expect(navigate).toHaveBeenCalledWith(['/shop'], {
+      queryParams: { search: 'green apple' },
+    });
   });
 });

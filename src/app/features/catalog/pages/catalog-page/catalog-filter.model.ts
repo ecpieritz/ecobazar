@@ -17,6 +17,7 @@ export interface CatalogFilters {
 }
 
 export interface CatalogFilterPatch {
+  readonly search?: string | null;
   readonly category?: string | null;
   readonly minimumPrice?: number | null;
   readonly maximumPrice?: number | null;

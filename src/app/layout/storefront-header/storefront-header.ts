@@ -13,21 +13,25 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
 import { StorefrontNavigation } from './storefront-navigation';
+import { StorefrontSearch } from './storefront-search';
 
 @Component({
   selector: 'app-storefront-header',
-  imports: [RouterLink, StorefrontNavigation],
+  imports: [RouterLink, StorefrontNavigation, StorefrontSearch],
   templateUrl: './storefront-header.html',
   styleUrl: './storefront-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StorefrontHeader {
   protected readonly isMenuOpen = signal(false);
+  protected readonly searchTerm = signal('');
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
+    this.syncSearchTerm();
+
     effect((onCleanup) => {
       if (!this.isMenuOpen()) {
         return;
@@ -43,7 +47,10 @@ export class StorefrontHeader {
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => this.closeMenu());
+      .subscribe(() => {
+        this.closeMenu();
+        this.syncSearchTerm();
+      });
   }
 
   protected toggleMenu(): void {
@@ -68,7 +75,15 @@ export class StorefrontHeader {
     }
   }
 
-  protected preventSearchNavigation(event: SubmitEvent): void {
-    event.preventDefault();
+  protected searchProducts(query: string): void {
+    void this.router.navigate(['/shop'], {
+      queryParams: query ? { search: query } : {},
+    });
+  }
+
+  private syncSearchTerm(): void {
+    this.searchTerm.set(
+      this.router.parseUrl(this.router.url).queryParamMap.get('search')?.trim() ?? '',
+    );
   }
 }

@@ -16,15 +16,12 @@
       </button>
     </div>
 
-    <form class="mobile-search" role="search" (submit)="preventSearchNavigation($event)">
-      <label class="visually-hidden" for="mobile-store-search">Search products</label>
-      <svg aria-hidden="true" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="7" />
-        <path d="m16 16 4 4" />
-      </svg>
-      <input id="mobile-store-search" name="search" type="search" placeholder="Search" />
-      <button type="submit">Search</button>
-    </form>
+    <app-storefront-search
+      class="mobile-search"
+      controlId="mobile-store-search"
+      [initialQuery]="searchTerm()"
+      (searchSubmitted)="searchProducts($event)"
+    />
 
     <nav class="primary-navigation" aria-label="Primary navigation">
       <ul role="list">

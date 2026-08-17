@@ -78,41 +78,6 @@ svg {
   }
 }
 
-.mobile-search {
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-
-  svg {
-    align-self: center;
-    width: 1.25rem;
-    margin-inline-start: var(--space-4);
-  }
-
-  input {
-    width: 100%;
-    min-width: 0;
-    padding: var(--space-3);
-    border: 0;
-    outline: 0;
-  }
-
-  button {
-    padding-inline: var(--space-5);
-    color: var(--color-text-inverse);
-    font-weight: var(--font-weight-semibold);
-    background: var(--color-primary);
-    border: 0;
-  }
-
-  &:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 var(--focus-ring-width) var(--color-focus-ring);
-  }
-}
-
 .primary-navigation > ul {
   display: grid;
   gap: var(--space-1);

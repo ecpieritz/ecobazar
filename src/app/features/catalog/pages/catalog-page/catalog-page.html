@@ -38,6 +38,17 @@
     </p>
   </header>
 
+  @if (filters().search) {
+    <section class="catalog__search-summary" aria-live="polite">
+      <p>
+        Search results for <strong>&ldquo;{{ filters().search }}&rdquo;</strong>
+      </p>
+      <button type="button" aria-label="Clear product search" (click)="clearSearch()">
+        Clear search
+      </button>
+    </section>
+  }
+
   <div class="catalog__layout">
     <app-catalog-filters
       [categories]="categoryState().categories"
