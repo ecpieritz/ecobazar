@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { PRODUCTS_FIXTURE } from '@core/mock-api/fixtures';
+import { ShoppingCartStore } from '@core/state';
 
 import { ProductQuickViewModal } from './product-quick-view-modal';
 
@@ -34,6 +35,7 @@ describe('ProductQuickViewModal', () => {
       imports: [ProductQuickViewModal],
       providers: [provideRouter([])],
     }).compileComponents();
+    TestBed.inject(ShoppingCartStore).clear();
   });
 
   it('presents product purchase details in an accessible modal', () => {
@@ -52,7 +54,7 @@ describe('ProductQuickViewModal', () => {
     expect(fullDetailsLink?.getAttribute('href')).toBe(`/shop/${product.slug}`);
   });
 
-  it('shows feedback after adding the selected quantity to the demo cart', () => {
+  it('adds the selected quantity to the shopping cart store', () => {
     const fixture = TestBed.createComponent(ProductQuickViewModal);
     fixture.componentRef.setInput('product', product);
     fixture.componentRef.setInput('open', true);
@@ -64,8 +66,9 @@ describe('ProductQuickViewModal', () => {
     fixture.detectChanges();
 
     expect(element.querySelector('app-feedback-message')?.textContent).toContain(
-      `2 items of ${product.name} added to your demo cart.`,
+      `2 items of ${product.name} added to your cart.`,
     );
+    expect(TestBed.inject(ShoppingCartStore).itemCount()).toBe(2);
   });
 
   it('resets product-specific controls when previewing another product', () => {

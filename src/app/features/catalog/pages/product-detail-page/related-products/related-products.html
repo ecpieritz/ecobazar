@@ -7,7 +7,11 @@
 
     <div class="recommendations__grid">
       @for (product of products(); track product.id) {
-        <app-product-card [product]="product" (quickView)="openQuickView($event)" />
+        <app-product-card
+          [product]="product"
+          (addToCart)="addProductToCart($event)"
+          (quickView)="openQuickView($event)"
+        />
       }
     </div>
   </section>

@@ -1,4 +1,5 @@
 import { EntityId, IsoDateString, Money } from './common.model';
+import type { Product } from './product.model';
 
 export interface CartItem {
   readonly productId: EntityId;
@@ -19,4 +20,10 @@ export interface CartTotals {
   readonly discount: Money;
   readonly shipping: Money;
   readonly total: Money;
+}
+
+export interface CartLine {
+  readonly product: Product;
+  readonly quantity: number;
+  readonly subtotal: Money;
 }

@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 
 import { ProductRepository } from '@core/data-access';
 import { PRODUCTS_FIXTURE } from '@core/mock-api/fixtures';
+import { ShoppingCartStore } from '@core/state';
 
 import { HomeProductSections } from './home-product-sections';
 
@@ -51,6 +52,28 @@ describe('HomeProductSections', () => {
     expect(element.querySelector<HTMLAnchorElement>('.promotion__cta')?.getAttribute('href')).toBe(
       '/shop?sale=true',
     );
+  });
+
+  it('adds products from storefront cards to the shared cart store', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HomeProductSections],
+      providers: [
+        provideRouter([]),
+        { provide: ProductRepository, useValue: { getProducts: () => of(response) } },
+      ],
+    }).compileComponents();
+    const shoppingCart = TestBed.inject(ShoppingCartStore);
+    shoppingCart.clear();
+    const fixture = TestBed.createComponent(HomeProductSections);
+    fixture.detectChanges();
+    const addButton = fixture.nativeElement.querySelector(
+      '.product-grid--featured .product-card__cart',
+    ) as HTMLButtonElement;
+
+    addButton.click();
+
+    expect(shoppingCart.itemCount()).toBe(1);
+    expect(shoppingCart.lines()[0]?.product).toEqual(PRODUCTS_FIXTURE[0]);
   });
 
   it('shows a shared failure state when the catalog request fails', async () => {

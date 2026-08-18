@@ -1,7 +1,8 @@
-import { DOCUMENT } from '@angular/common';
+import { CurrencyPipe, DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   effect,
   HostListener,
@@ -12,12 +13,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { ShoppingCartStore } from '@core/state';
+
 import { StorefrontNavigation } from './storefront-navigation';
 import { StorefrontSearch } from './storefront-search';
 
 @Component({
   selector: 'app-storefront-header',
-  imports: [RouterLink, StorefrontNavigation, StorefrontSearch],
+  imports: [CurrencyPipe, RouterLink, StorefrontNavigation, StorefrontSearch],
   templateUrl: './storefront-header.html',
   styleUrl: './storefront-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,9 +28,16 @@ import { StorefrontSearch } from './storefront-search';
 export class StorefrontHeader {
   protected readonly isMenuOpen = signal(false);
   protected readonly searchTerm = signal('');
+  protected readonly shoppingCart = inject(ShoppingCartStore);
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly cartLabel = computed(() => {
+    const itemCount = this.shoppingCart.itemCount();
+    const itemLabel = itemCount === 1 ? 'item' : 'items';
+    return `Shopping cart, ${itemCount} ${itemLabel}, ${this.shoppingCart.subtotal().amount} dollars`;
+  });
 
   constructor() {
     this.syncSearchTerm();

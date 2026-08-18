@@ -2,6 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 
+import { PRODUCTS_FIXTURE } from '@core/mock-api/fixtures';
+import { ShoppingCartStore } from '@core/state';
+
 import { StorefrontHeader } from './storefront-header';
 
 describe('StorefrontHeader', () => {
@@ -10,6 +13,7 @@ describe('StorefrontHeader', () => {
       imports: [StorefrontHeader],
       providers: [provideRouter([])],
     }).compileComponents();
+    TestBed.inject(ShoppingCartStore).clear();
   });
 
   it('should render the storefront identity and primary actions', () => {
@@ -22,6 +26,23 @@ describe('StorefrontHeader', () => {
     expect(element.querySelector('[aria-label^="Shopping cart"]')).toBeTruthy();
     expect(element.querySelector('nav[aria-label="Primary navigation"]')).toBeTruthy();
     expect(element.querySelectorAll('form[role="search"]')).toHaveLength(2);
+  });
+
+  it('should reflect reactive cart totals in the header action', () => {
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    const shoppingCart = TestBed.inject(ShoppingCartStore);
+    const product = PRODUCTS_FIXTURE[0];
+    fixture.detectChanges();
+
+    shoppingCart.addProduct(product, 2);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('.cart-link__count')?.textContent).toContain('2');
+    expect(element.querySelector('.cart-link__copy strong')?.textContent).toContain(
+      (product.price.amount * 2).toFixed(2),
+    );
+    expect(element.querySelector('.cart-link')?.getAttribute('aria-label')).toContain('2 items');
   });
 
   it('should toggle and close the responsive navigation', () => {

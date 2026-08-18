@@ -5,6 +5,7 @@ import { catchError, map, of, startWith } from 'rxjs';
 
 import { ProductRepository } from '@core/data-access';
 import type { Product } from '@core/domain';
+import { ShoppingCartStore } from '@core/state';
 import { ProductCard } from '@shared/ui';
 
 import { ProductQuickViewModal } from '../../../catalog/components/product-quick-view-modal/product-quick-view-modal';
@@ -30,6 +31,7 @@ const EMPTY_GROUPS: ProductGroups = { featured: [], promotional: [] };
 })
 export class HomeProductSections {
   private readonly productRepository = inject(ProductRepository);
+  private readonly shoppingCart = inject(ShoppingCartStore);
 
   protected readonly quickViewProduct = signal<Product | null>(null);
   protected readonly quickViewOpen = signal(false);
@@ -68,5 +70,9 @@ export class HomeProductSections {
   protected openQuickView(product: Product): void {
     this.quickViewProduct.set(product);
     this.quickViewOpen.set(true);
+  }
+
+  protected addProductToCart(product: Product): void {
+    this.shoppingCart.addProduct(product);
   }
 }

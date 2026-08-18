@@ -9,6 +9,7 @@ import {
   PRODUCT_REVIEWS_FIXTURE,
   PRODUCTS_FIXTURE,
 } from '@core/mock-api/fixtures';
+import { ShoppingCartStore } from '@core/state';
 
 import { ProductDetailPage } from './product-detail-page';
 
@@ -59,6 +60,7 @@ describe('ProductDetailPage', () => {
         { provide: ReviewRepository, useValue: { getProductReviews } },
       ],
     }).compileComponents();
+    TestBed.inject(ShoppingCartStore).clear();
   });
 
   it('loads product data from the route and renders related products', () => {
@@ -94,7 +96,7 @@ describe('ProductDetailPage', () => {
     expect(element.querySelector('a[href="/shop"]')?.textContent).toContain('Return to the shop');
   });
 
-  it('acknowledges a quantity selected for the demo cart', () => {
+  it('adds the selected quantity to the shopping cart store', () => {
     const fixture = TestBed.createComponent(ProductDetailPage);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -110,6 +112,7 @@ describe('ProductDetailPage', () => {
     expect(element.querySelector('[role="status"]')?.textContent).toContain(
       `2 items of ${product.name} added`,
     );
+    expect(TestBed.inject(ShoppingCartStore).itemCount()).toBe(2);
   });
 
   it('keeps the selected information tab in the URL', () => {

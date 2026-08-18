@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 
 import type { Product } from '@core/domain';
+import { ShoppingCartStore } from '@core/state';
 import { ProductCard } from '@shared/ui';
 
 import { ProductQuickViewModal } from '../../../components/product-quick-view-modal/product-quick-view-modal';
@@ -18,9 +19,14 @@ export class RelatedProducts {
 
   protected readonly quickViewProduct = signal<Product | null>(null);
   protected readonly quickViewOpen = signal(false);
+  private readonly shoppingCart = inject(ShoppingCartStore);
 
   protected openQuickView(product: Product): void {
     this.quickViewProduct.set(product);
     this.quickViewOpen.set(true);
+  }
+
+  protected addProductToCart(product: Product): void {
+    this.shoppingCart.addProduct(product);
   }
 }

@@ -6,6 +6,7 @@ import { catchError, distinctUntilChanged, forkJoin, map, of, startWith, switchM
 
 import { CategoryRepository, ProductRepository, ReviewRepository } from '@core/data-access';
 import type { Product, ProductCategory, ProductReview } from '@core/domain';
+import { ShoppingCartStore } from '@core/state';
 import { FeedbackMessage } from '@shared/ui';
 
 import { ProductGallery } from './product-gallery/product-gallery';
@@ -54,6 +55,7 @@ export class ProductDetailPage {
   private readonly categoryRepository = inject(CategoryRepository);
   private readonly reviewRepository = inject(ReviewRepository);
   private readonly recommendationService = inject(ProductRecommendationService);
+  private readonly shoppingCart = inject(ShoppingCartStore);
 
   protected readonly cartNotice = signal<string | null>(null);
   protected readonly informationTab = toSignal(
@@ -121,8 +123,15 @@ export class ProductDetailPage {
   }
 
   protected showCartNotice({ product, quantity }: ProductCartSelection): void {
-    const unit = quantity === 1 ? 'item' : 'items';
-    this.cartNotice.set(`${quantity} ${unit} of ${product.name} added to your demo cart.`);
+    const addedQuantity = this.shoppingCart.addProduct(product, quantity);
+
+    if (!addedQuantity) {
+      this.cartNotice.set(`${product.name} is already at the maximum available quantity.`);
+      return;
+    }
+
+    const unit = addedQuantity === 1 ? 'item' : 'items';
+    this.cartNotice.set(`${addedQuantity} ${unit} of ${product.name} added to your cart.`);
   }
 
   protected dismissCartNotice(): void {

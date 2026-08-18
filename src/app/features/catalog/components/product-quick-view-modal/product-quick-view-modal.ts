@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, effect, input, model, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  model,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import type { Product } from '@core/domain';
+import { ShoppingCartStore } from '@core/state';
 import { FeedbackMessage, Modal } from '@shared/ui';
 
 import { ProductGallery } from '../../pages/product-detail-page/product-gallery/product-gallery';
@@ -22,6 +31,7 @@ export class ProductQuickViewModal {
   readonly open = model(false);
 
   protected readonly cartNotice = signal<string | null>(null);
+  private readonly shoppingCart = inject(ShoppingCartStore);
   private activeProductId: Product['id'] | null = null;
 
   constructor() {
@@ -36,8 +46,15 @@ export class ProductQuickViewModal {
   }
 
   protected showCartNotice({ product, quantity }: ProductCartSelection): void {
+    const addedQuantity = this.shoppingCart.addProduct(product, quantity);
+
+    if (!addedQuantity) {
+      this.cartNotice.set(`${product.name} is already at the maximum available quantity.`);
+      return;
+    }
+
     this.cartNotice.set(
-      `${quantity} ${quantity === 1 ? 'item' : 'items'} of ${product.name} added to your demo cart.`,
+      `${addedQuantity} ${addedQuantity === 1 ? 'item' : 'items'} of ${product.name} added to your cart.`,
     );
   }
 
