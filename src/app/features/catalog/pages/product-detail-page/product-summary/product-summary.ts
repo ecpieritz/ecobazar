@@ -1,5 +1,13 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import type { Product, ProductUnit } from '@core/domain';
@@ -26,13 +34,14 @@ const UNIT_LABELS: Readonly<Record<ProductUnit, string>> = {
 })
 export class ProductSummary {
   readonly product = input.required<Product>();
-  readonly categoryName = input.required<string>();
+  readonly categoryName = input<string | null>(null);
   readonly categorySlug = input<string | null>(null);
 
   readonly addRequested = output<ProductCartSelection>();
 
   protected readonly quantity = signal(1);
   protected readonly wishlisted = signal(false);
+  private activeProductId: Product['id'] | null = null;
   protected readonly unavailable = computed(
     () => this.product().inventory.status === 'out-of-stock',
   );
@@ -52,6 +61,18 @@ export class ProductSummary {
   protected readonly categoryQuery = computed(() =>
     this.categorySlug() ? { category: this.categorySlug() } : null,
   );
+
+  constructor() {
+    effect(() => {
+      const productId = this.product().id;
+
+      if (productId !== this.activeProductId) {
+        this.activeProductId = productId;
+        this.quantity.set(1);
+        this.wishlisted.set(false);
+      }
+    });
+  }
 
   protected decreaseQuantity(): void {
     this.quantity.update((quantity) => Math.max(1, quantity - 1));

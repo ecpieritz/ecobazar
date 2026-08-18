@@ -99,6 +99,24 @@ describe('CatalogPage', () => {
     expect(element.querySelectorAll('.pagination button')).toHaveLength(4);
   });
 
+  it('opens a product quick view from a catalog card', () => {
+    const fixture = TestBed.createComponent(CatalogPage);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const trigger = element.querySelector(
+      '.product-grid button[aria-label^="Quick view"]',
+    ) as HTMLButtonElement;
+
+    trigger.click();
+    fixture.detectChanges();
+
+    const dialog = element.querySelector(
+      'app-product-quick-view-modal dialog',
+    ) as HTMLDialogElement;
+    expect(dialog.open).toBe(true);
+    expect(dialog.textContent).toContain(PRODUCTS_FIXTURE[0].name);
+  });
+
   it('updates pagination without losing active filters', () => {
     const router = TestBed.inject(Router);
     const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);

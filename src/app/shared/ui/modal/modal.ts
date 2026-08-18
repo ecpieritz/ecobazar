@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 export type OverlayCloseReason = 'backdrop' | 'close-button' | 'escape' | 'programmatic';
-export type ModalVariant = 'default' | 'promotion';
+export type ModalVariant = 'default' | 'promotion' | 'quick-view';
 
 let nextModalId = 0;
 

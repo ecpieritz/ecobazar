@@ -57,6 +57,16 @@ describe('Modal', () => {
     expect(panel.classList.contains('modal__panel--promotion')).toBe(true);
   });
 
+  it('supports the expanded quick view presentation', () => {
+    fixture.componentRef.setInput('variant', 'quick-view');
+    fixture.componentRef.setInput('open', true);
+    fixture.detectChanges();
+
+    const panel = fixture.nativeElement.querySelector('.modal__panel') as HTMLElement;
+
+    expect(panel.classList.contains('modal__panel--quick-view')).toBe(true);
+  });
+
   it('closes from Escape and reports the reason', () => {
     const closed = vi.fn();
     fixture.componentInstance.closed.subscribe(closed);

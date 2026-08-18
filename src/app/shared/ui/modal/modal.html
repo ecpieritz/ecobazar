@@ -7,7 +7,11 @@
   (pointerdown)="handleBackdrop($event)"
   (close)="handleNativeClose()"
 >
-  <section class="modal__panel" [class.modal__panel--promotion]="variant() === 'promotion'">
+  <section
+    class="modal__panel"
+    [class.modal__panel--promotion]="variant() === 'promotion'"
+    [class.modal__panel--quick-view]="variant() === 'quick-view'"
+  >
     <header class="modal__header">
       <div>
         <h2 [id]="titleId">{{ title() }}</h2>

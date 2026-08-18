@@ -33,9 +33,9 @@
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
 
-    &--promotion {
+    &--promotion,
+    &--quick-view {
       position: relative;
-      width: min(100%, 55rem);
 
       .modal__header {
         position: absolute;
@@ -49,10 +49,18 @@
           @include visually-hidden;
         }
       }
+    }
+
+    &--promotion {
+      width: min(100%, 55rem);
 
       .modal__body {
         padding: 0;
       }
+    }
+
+    &--quick-view {
+      width: min(100%, 76rem);
     }
   }
 

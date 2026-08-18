@@ -111,16 +111,18 @@
   </div>
 
   <dl class="summary__taxonomy">
-    <div>
-      <dt>Category:</dt>
-      <dd>
-        @if (categoryRoute(); as route) {
-          <a [routerLink]="route" [queryParams]="categoryQuery()">{{ categoryName() }}</a>
-        } @else {
-          {{ categoryName() }}
-        }
-      </dd>
-    </div>
+    @if (categoryName(); as name) {
+      <div>
+        <dt>Category:</dt>
+        <dd>
+          @if (categoryRoute(); as route) {
+            <a [routerLink]="route" [queryParams]="categoryQuery()">{{ name }}</a>
+          } @else {
+            {{ name }}
+          }
+        </dd>
+      </div>
+    }
     <div>
       <dt>Tags:</dt>
       <dd>{{ product().tags.join(', ') }}</dd>

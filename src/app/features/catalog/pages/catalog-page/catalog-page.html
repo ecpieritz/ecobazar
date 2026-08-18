@@ -86,7 +86,7 @@
           @if (state().products.length) {
             <div class="product-grid">
               @for (product of state().products; track product.id) {
-                <app-product-card [product]="product" />
+                <app-product-card [product]="product" (quickView)="openQuickView($event)" />
               }
             </div>
           } @else {
@@ -173,3 +173,5 @@
     {{ state().pagination.totalItems === 1 ? 'result' : 'results' }}
   </app-button>
 </app-drawer>
+
+<app-product-quick-view-modal [product]="quickViewProduct()" [(open)]="quickViewOpen" />

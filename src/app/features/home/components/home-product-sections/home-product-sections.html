@@ -39,7 +39,7 @@
         @if (state().groups.featured.length) {
           <div class="product-grid product-grid--featured">
             @for (product of state().groups.featured; track product.id) {
-              <app-product-card [product]="product" />
+              <app-product-card [product]="product" (quickView)="openQuickView($event)" />
             }
           </div>
         } @else {
@@ -93,7 +93,7 @@
                 <span class="promotion-card__discount">
                   Save {{ discountPercentage(product) }}%
                 </span>
-                <app-product-card [product]="product" />
+                <app-product-card [product]="product" (quickView)="openQuickView($event)" />
               </div>
             }
           </div>
@@ -104,3 +104,5 @@
     }
   </section>
 </div>
+
+<app-product-quick-view-modal [product]="quickViewProduct()" [(open)]="quickViewOpen" />

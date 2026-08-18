@@ -20,6 +20,7 @@ import { CategoryRepository, ProductRepository } from '@core/data-access';
 import type { Product, ProductCategory, Rating } from '@core/domain';
 import { Button, Drawer, ProductCard } from '@shared/ui';
 
+import { ProductQuickViewModal } from '../../components/product-quick-view-modal/product-quick-view-modal';
 import { type CatalogFilterPatch, type CatalogFilters } from './catalog-filter.model';
 import { CatalogFiltersPanel } from './catalog-filters';
 
@@ -129,7 +130,7 @@ const productQuery = (filters: CatalogFilters): ProductListQuery => ({
 
 @Component({
   selector: 'app-catalog-page',
-  imports: [Button, CatalogFiltersPanel, Drawer, ProductCard],
+  imports: [Button, CatalogFiltersPanel, Drawer, ProductCard, ProductQuickViewModal],
   templateUrl: './catalog-page.html',
   styleUrl: './catalog-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -141,6 +142,8 @@ export class CatalogPage {
   private readonly productRepository = inject(ProductRepository);
 
   protected readonly filtersExpanded = signal(false);
+  protected readonly quickViewProduct = signal<Product | null>(null);
+  protected readonly quickViewOpen = signal(false);
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly sortOptions: readonly { value: ProductSortOption; label: string }[] = [
     { value: 'featured', label: 'Featured' },
@@ -286,6 +289,11 @@ export class CatalogPage {
 
   protected closeFilterDrawer(): void {
     this.filtersExpanded.set(false);
+  }
+
+  protected openQuickView(product: Product): void {
+    this.quickViewProduct.set(product);
+    this.quickViewOpen.set(true);
   }
 
   protected changeSort(event: Event): void {

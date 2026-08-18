@@ -1,0 +1,33 @@
+@if (product(); as item) {
+  <app-modal
+    [title]="'Quick view: ' + item.name"
+    [description]="'Preview product information and purchase options for ' + item.name"
+    closeLabel="Close product quick view"
+    variant="quick-view"
+    [(open)]="open"
+  >
+    <div class="quick-view">
+      <app-product-gallery [images]="item.images" [productName]="item.name" />
+
+      <div class="quick-view__content">
+        <app-product-summary [product]="item" (addRequested)="showCartNotice($event)" />
+
+        <app-feedback-message
+          tone="success"
+          [message]="cartNotice()"
+          dismissible
+          (dismissed)="cartNotice.set(null)"
+        />
+
+        <a
+          class="quick-view__details-link"
+          [routerLink]="['/shop', item.slug]"
+          (click)="closeForNavigation()"
+        >
+          View full product details
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </app-modal>
+}

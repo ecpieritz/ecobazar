@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, map, of, startWith } from 'rxjs';
@@ -6,6 +6,8 @@ import { catchError, map, of, startWith } from 'rxjs';
 import { ProductRepository } from '@core/data-access';
 import type { Product } from '@core/domain';
 import { ProductCard } from '@shared/ui';
+
+import { ProductQuickViewModal } from '../../../catalog/components/product-quick-view-modal/product-quick-view-modal';
 
 interface ProductGroups {
   readonly featured: readonly Product[];
@@ -21,13 +23,16 @@ const EMPTY_GROUPS: ProductGroups = { featured: [], promotional: [] };
 
 @Component({
   selector: 'app-home-product-sections',
-  imports: [ProductCard, RouterLink],
+  imports: [ProductCard, ProductQuickViewModal, RouterLink],
   templateUrl: './home-product-sections.html',
   styleUrl: './home-product-sections.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeProductSections {
   private readonly productRepository = inject(ProductRepository);
+
+  protected readonly quickViewProduct = signal<Product | null>(null);
+  protected readonly quickViewOpen = signal(false);
 
   protected readonly state = toSignal(
     this.productRepository.getProducts({ page: 1, pageSize: 100, sort: 'featured' }).pipe(
@@ -58,5 +63,10 @@ export class HomeProductSections {
     }
 
     return Math.round(((compareAtPrice - product.price.amount) / compareAtPrice) * 100);
+  }
+
+  protected openQuickView(product: Product): void {
+    this.quickViewProduct.set(product);
+    this.quickViewOpen.set(true);
   }
 }
