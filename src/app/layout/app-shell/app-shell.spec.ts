@@ -8,12 +8,34 @@ import { breadcrumbRouteData } from '../breadcrumb-banner/breadcrumb-item';
 import { NewsletterSignup } from '../newsletter-signup/newsletter-signup';
 import { StorefrontFooter } from '../storefront-footer/storefront-footer';
 import { AppShell } from './app-shell';
+import { ShoppingCartDrawer } from '../shopping-cart-drawer/shopping-cart-drawer';
 import { StorefrontHeader } from '../storefront-header/storefront-header';
 
 @Component({ template: '' })
 class TestPage {}
 
+const installDialogPolyfill = (): void => {
+  Object.defineProperties(HTMLDialogElement.prototype, {
+    showModal: {
+      configurable: true,
+      value(this: HTMLDialogElement): void {
+        this.open = true;
+      },
+    },
+    close: {
+      configurable: true,
+      value(this: HTMLDialogElement, returnValue = ''): void {
+        this.returnValue = returnValue;
+        this.open = false;
+        this.dispatchEvent(new Event('close'));
+      },
+    },
+  });
+};
+
 describe('AppShell', () => {
+  beforeAll(installDialogPolyfill);
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppShell],
@@ -38,9 +60,24 @@ describe('AppShell', () => {
 
     expect(fixture.componentInstance).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(StorefrontHeader))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(ShoppingCartDrawer))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(RouterOutlet))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(NewsletterSignup))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(StorefrontFooter))).toBeTruthy();
+  });
+
+  it('should open the shared cart drawer from the header trigger', () => {
+    const fixture = TestBed.createComponent(AppShell);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('.cart-link') as HTMLButtonElement;
+
+    trigger.click();
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement.querySelector('dialog.drawer') as HTMLDialogElement).open).toBe(
+      true,
+    );
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
   });
 
   it('should render breadcrumbs from the active route and hide them on routes without metadata', async () => {

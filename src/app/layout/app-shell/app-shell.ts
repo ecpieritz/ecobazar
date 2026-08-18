@@ -6,18 +6,27 @@ import { filter } from 'rxjs';
 import { BreadcrumbBanner } from '../breadcrumb-banner/breadcrumb-banner';
 import { BREADCRUMBS_ROUTE_DATA, type BreadcrumbItem } from '../breadcrumb-banner/breadcrumb-item';
 import { NewsletterSignup } from '../newsletter-signup/newsletter-signup';
+import { ShoppingCartDrawer } from '../shopping-cart-drawer/shopping-cart-drawer';
 import { StorefrontFooter } from '../storefront-footer/storefront-footer';
 import { StorefrontHeader } from '../storefront-header/storefront-header';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, StorefrontHeader, BreadcrumbBanner, NewsletterSignup, StorefrontFooter],
+  imports: [
+    RouterOutlet,
+    StorefrontHeader,
+    BreadcrumbBanner,
+    NewsletterSignup,
+    ShoppingCartDrawer,
+    StorefrontFooter,
+  ],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppShell {
   protected readonly breadcrumbs = signal<readonly BreadcrumbItem[]>([]);
+  protected readonly cartDrawerOpen = signal(false);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -29,7 +38,10 @@ export class AppShell {
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => this.updateBreadcrumbs());
+      .subscribe(() => {
+        this.cartDrawerOpen.set(false);
+        this.updateBreadcrumbs();
+      });
   }
 
   private updateBreadcrumbs(): void {

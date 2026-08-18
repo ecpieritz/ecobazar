@@ -1,0 +1,76 @@
+<app-drawer
+  [title]="drawerTitle()"
+  description="Review the products currently in your cart"
+  placement="end"
+  size="medium"
+  closeLabel="Close shopping cart"
+  [(open)]="open"
+>
+  @if (shoppingCart.lines().length) {
+    <ul class="cart-lines" aria-label="Cart products">
+      @for (line of shoppingCart.lines(); track line.product.id) {
+        <li class="cart-line">
+          <a
+            class="cart-line__image"
+            [routerLink]="['/shop', line.product.slug]"
+            [attr.aria-label]="'View ' + line.product.name"
+            (click)="closeForNavigation()"
+          >
+            @if (primaryImage(line.product); as image) {
+              <img [src]="image.src" [alt]="image.alt" />
+            } @else {
+              <span aria-hidden="true">?</span>
+            }
+          </a>
+
+          <div class="cart-line__content">
+            <a [routerLink]="['/shop', line.product.slug]" (click)="closeForNavigation()">
+              {{ line.product.name }}
+            </a>
+            <p>
+              {{ line.quantity }} &times;
+              <strong>
+                {{ line.product.price.amount | currency: line.product.price.currency }}
+              </strong>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            [attr.aria-label]="'Remove ' + line.product.name + ' from cart'"
+            (click)="removeProduct(line.product.id)"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty-cart">
+      <span aria-hidden="true">&#128722;</span>
+      <h3>Your cart is empty</h3>
+      <p>Add fresh products to see them here.</p>
+      <a routerLink="/shop" (click)="closeForNavigation()">Continue shopping</a>
+    </div>
+  }
+
+  @if (!shoppingCart.isEmpty()) {
+    <div drawerActions class="cart-drawer-footer">
+      <p>
+        <span>
+          {{ shoppingCart.itemCount() }}
+          {{ shoppingCart.itemCount() === 1 ? 'product' : 'products' }}
+        </span>
+        <strong>
+          {{ shoppingCart.subtotal().amount | currency: shoppingCart.subtotal().currency }}
+        </strong>
+      </p>
+      <a class="cart-drawer-footer__checkout" routerLink="/checkout" (click)="closeForNavigation()">
+        Checkout
+      </a>
+      <a class="cart-drawer-footer__cart" routerLink="/cart" (click)="closeForNavigation()">
+        Go to cart
+      </a>
+    </div>
+  }
+</app-drawer>

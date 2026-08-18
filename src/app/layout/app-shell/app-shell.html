@@ -1,4 +1,5 @@
-<app-storefront-header />
+<app-storefront-header [cartOpen]="cartDrawerOpen()" (cartRequested)="cartDrawerOpen.set(true)" />
+<app-shopping-cart-drawer [(open)]="cartDrawerOpen" />
 @if (breadcrumbs().length > 0) {
   <app-breadcrumb-banner [items]="breadcrumbs()" />
 }

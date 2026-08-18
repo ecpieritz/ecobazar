@@ -74,7 +74,14 @@
           </svg>
         </a>
         <span class="header-actions__divider" aria-hidden="true"></span>
-        <a class="cart-link" routerLink="/cart" [attr.aria-label]="cartLabel()">
+        <button
+          class="cart-link"
+          type="button"
+          aria-haspopup="dialog"
+          [attr.aria-expanded]="cartOpen()"
+          [attr.aria-label]="cartLabel()"
+          (click)="requestCart()"
+        >
           <span class="cart-link__icon">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M6 8h12l1 13H5L6 8Z" />
@@ -90,7 +97,7 @@
               {{ shoppingCart.subtotal().amount | currency: shoppingCart.subtotal().currency }}
             </strong>
           </span>
-        </a>
+        </button>
       </div>
     </div>
   </div>

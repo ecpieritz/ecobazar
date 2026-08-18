@@ -134,6 +134,15 @@ svg {
 
 .cart-link {
   gap: var(--space-3);
+  padding: var(--space-2);
+  text-align: start;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  &:focus-visible {
+    @include focus-ring;
+  }
 
   &__icon {
     position: relative;

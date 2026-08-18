@@ -45,6 +45,21 @@ describe('StorefrontHeader', () => {
     expect(element.querySelector('.cart-link')?.getAttribute('aria-label')).toContain('2 items');
   });
 
+  it('should expose the cart drawer trigger state and request opening', () => {
+    const fixture = TestBed.createComponent(StorefrontHeader);
+    const requested = vi.fn();
+    fixture.componentInstance.cartRequested.subscribe(requested);
+    fixture.componentRef.setInput('cartOpen', true);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('.cart-link') as HTMLButtonElement;
+
+    trigger.click();
+
+    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(requested).toHaveBeenCalledOnce();
+  });
+
   it('should toggle and close the responsive navigation', () => {
     const fixture = TestBed.createComponent(StorefrontHeader);
     fixture.detectChanges();

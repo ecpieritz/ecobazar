@@ -7,6 +7,8 @@ import {
   effect,
   HostListener,
   inject,
+  input,
+  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,6 +28,9 @@ import { StorefrontSearch } from './storefront-search';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StorefrontHeader {
+  readonly cartOpen = input(false);
+  readonly cartRequested = output<void>();
+
   protected readonly isMenuOpen = signal(false);
   protected readonly searchTerm = signal('');
   protected readonly shoppingCart = inject(ShoppingCartStore);
@@ -69,6 +74,11 @@ export class StorefrontHeader {
 
   protected closeMenu(): void {
     this.isMenuOpen.set(false);
+  }
+
+  protected requestCart(): void {
+    this.closeMenu();
+    this.cartRequested.emit();
   }
 
   @HostListener('document:keydown.escape')
