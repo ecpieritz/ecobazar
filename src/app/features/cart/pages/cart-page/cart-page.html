@@ -1,0 +1,173 @@
+<main class="cart-page container">
+  <h1>My Shopping Cart</h1>
+
+  @if (shoppingCart.isEmpty()) {
+    <section class="empty-state">
+      <span aria-hidden="true">&#128722;</span>
+      <h2>Your cart is empty</h2>
+      <p>Explore our fresh products and add your favorites to the cart.</p>
+      <a routerLink="/shop">Return to shop</a>
+    </section>
+  } @else {
+    <div class="cart-layout">
+      <section class="cart-products" aria-label="Products in your cart">
+        <div class="cart-products__heading" aria-hidden="true">
+          <span>Product</span><span>Price</span><span>Quantity</span><span>Subtotal</span>
+        </div>
+
+        <ul>
+          @for (line of shoppingCart.lines(); track line.product.id) {
+            <li class="cart-line">
+              <div class="cart-line__product">
+                <a [routerLink]="['/shop', line.product.slug]">
+                  @if (primaryImage(line.product); as image) {
+                    <img [src]="image.src" [alt]="image.alt" />
+                  } @else {
+                    <span class="cart-line__placeholder" aria-hidden="true">?</span>
+                  }
+                </a>
+                <a [routerLink]="['/shop', line.product.slug]">{{ line.product.name }}</a>
+              </div>
+              <p class="cart-line__price">
+                <span>Price</span>
+                {{ line.product.price.amount | currency: line.product.price.currency }}
+              </p>
+              <div class="quantity-control">
+                <button
+                  type="button"
+                  [attr.aria-label]="'Decrease ' + line.product.name + ' quantity'"
+                  (click)="decreaseQuantity(line.product.id, line.quantity)"
+                >
+                  &minus;
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  [max]="line.product.inventory.quantity"
+                  [value]="line.quantity"
+                  [attr.aria-label]="line.product.name + ' quantity'"
+                  (change)="changeQuantity(line.product.id, $event)"
+                />
+                <button
+                  type="button"
+                  [disabled]="line.quantity >= line.product.inventory.quantity"
+                  [attr.aria-label]="'Increase ' + line.product.name + ' quantity'"
+                  (click)="increaseQuantity(line.product.id, line.quantity)"
+                >
+                  &plus;
+                </button>
+              </div>
+              <strong class="cart-line__subtotal">
+                <span>Subtotal</span>
+                {{ line.subtotal.amount | currency: line.subtotal.currency }}
+              </strong>
+              <button
+                class="cart-line__remove"
+                type="button"
+                [attr.aria-label]="'Remove ' + line.product.name + ' from cart'"
+                (click)="removeProduct(line.product.id)"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </li>
+          }
+        </ul>
+        <div class="cart-products__actions"><a routerLink="/shop">Return to shop</a></div>
+      </section>
+
+      <aside class="cart-summary" aria-labelledby="cart-total-title">
+        <h2 id="cart-total-title">Cart Total</h2>
+        <dl>
+          <div>
+            <dt>Subtotal</dt>
+            <dd>
+              {{
+                shoppingCart.totals().subtotal.amount
+                  | currency: shoppingCart.totals().subtotal.currency
+              }}
+            </dd>
+          </div>
+          @if (shoppingCart.appliedCoupon(); as coupon) {
+            <div class="cart-summary__discount">
+              <dt>Discount ({{ coupon.code }})</dt>
+              <dd>
+                &minus;{{
+                  shoppingCart.totals().discount.amount
+                    | currency: shoppingCart.totals().discount.currency
+                }}
+              </dd>
+            </div>
+          }
+          <div>
+            <dt>Shipping</dt>
+            <dd>
+              @if (shoppingCart.totals().shipping.amount === 0) {
+                Free
+              } @else {
+                {{
+                  shoppingCart.totals().shipping.amount
+                    | currency: shoppingCart.totals().shipping.currency
+                }}
+              }
+            </dd>
+          </div>
+          <div class="cart-summary__total">
+            <dt>Total</dt>
+            <dd>
+              {{
+                shoppingCart.totals().total.amount | currency: shoppingCart.totals().total.currency
+              }}
+            </dd>
+          </div>
+        </dl>
+        @if (shoppingCart.subtotal().amount < freeShippingThreshold) {
+          <p class="shipping-note">
+            Add
+            {{
+              freeShippingThreshold - shoppingCart.subtotal().amount
+                | currency: shoppingCart.subtotal().currency
+            }}
+            more for free shipping.
+          </p>
+        }
+        <a class="checkout-button" routerLink="/checkout">Proceed to checkout</a>
+      </aside>
+    </div>
+
+    <section class="coupon-card" aria-labelledby="coupon-title">
+      <div>
+        <h2 id="coupon-title">Coupon Code</h2>
+        <p>Try <strong>FRESH10</strong> or <strong>SAVE5</strong>.</p>
+      </div>
+      @if (shoppingCart.appliedCoupon(); as coupon) {
+        <div class="applied-coupon">
+          <span
+            ><strong>{{ coupon.code }}</strong> &mdash; {{ coupon.description }}</span
+          ><button type="button" (click)="removeCoupon()">Remove</button>
+        </div>
+      } @else {
+        <form (submit)="applyCoupon($event)">
+          <label class="visually-hidden" for="coupon-code">Coupon code</label>
+          <input
+            id="coupon-code"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter code"
+            [value]="couponCode()"
+            (input)="updateCouponCode($event)"
+          />
+          <button type="submit">Apply Coupon</button>
+        </form>
+      }
+      @if (couponFeedback(); as feedback) {
+        <p
+          class="coupon-feedback"
+          [class.coupon-feedback--success]="feedback.status === 'applied'"
+          [attr.role]="feedback.status === 'applied' ? 'status' : 'alert'"
+        >
+          {{ feedback.message }}
+        </p>
+      }
+    </section>
+  }
+</main>

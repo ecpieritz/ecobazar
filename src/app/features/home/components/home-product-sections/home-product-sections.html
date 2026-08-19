@@ -41,7 +41,9 @@
             @for (product of state().groups.featured; track product.id) {
               <app-product-card
                 [product]="product"
+                [wishlisted]="wishlist.hasProduct(product.id)"
                 (addToCart)="addProductToCart($event)"
+                (toggleWishlist)="toggleWishlist($event)"
                 (quickView)="openQuickView($event)"
               />
             }
@@ -99,7 +101,9 @@
                 </span>
                 <app-product-card
                   [product]="product"
+                  [wishlisted]="wishlist.hasProduct(product.id)"
                   (addToCart)="addProductToCart($event)"
+                  (toggleWishlist)="toggleWishlist($event)"
                   (quickView)="openQuickView($event)"
                 />
               </div>

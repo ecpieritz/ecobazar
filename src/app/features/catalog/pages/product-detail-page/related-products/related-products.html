@@ -9,7 +9,9 @@
       @for (product of products(); track product.id) {
         <app-product-card
           [product]="product"
+          [wishlisted]="wishlist.hasProduct(product.id)"
           (addToCart)="addProductToCart($event)"
+          (toggleWishlist)="toggleWishlist($event)"
           (quickView)="openQuickView($event)"
         />
       }

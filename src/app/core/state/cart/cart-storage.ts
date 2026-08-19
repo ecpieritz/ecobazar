@@ -4,13 +4,15 @@ import { createPersistenceKey, type LocalStorageService } from '@core/persistenc
 export interface CartStoreState {
   readonly items: readonly CartItem[];
   readonly products: ReadonlyMap<string, Product>;
+  readonly couponCode?: string;
   readonly updatedAt: string;
 }
 
 interface PersistedCartState {
-  readonly version: 1;
+  readonly version: 1 | 2;
   readonly items: readonly CartItem[];
   readonly products: readonly Product[];
+  readonly couponCode?: string;
   readonly updatedAt: string;
 }
 
@@ -52,7 +54,7 @@ export const restoreCartState = (storage: LocalStorageService): CartStoreState =
 
   if (
     !isRecord(persisted) ||
-    persisted['version'] !== 1 ||
+    (persisted['version'] !== 1 && persisted['version'] !== 2) ||
     !Array.isArray(persisted['items']) ||
     !Array.isArray(persisted['products'])
   ) {
@@ -91,6 +93,9 @@ export const restoreCartState = (storage: LocalStorageService): CartStoreState =
   return {
     items,
     products: activeProducts,
+    ...(persisted['version'] === 2 && typeof persisted['couponCode'] === 'string'
+      ? { couponCode: persisted['couponCode'] }
+      : {}),
     updatedAt:
       typeof persisted['updatedAt'] === 'string'
         ? persisted['updatedAt']
@@ -105,12 +110,13 @@ export const persistCartState = (storage: LocalStorageService, state: CartStoreS
   }
 
   const persisted: PersistedCartState = {
-    version: 1,
+    version: 2,
     items: state.items,
     products: state.items.flatMap(({ productId }) => {
       const product = state.products.get(productId);
       return product ? [product] : [];
     }),
+    ...(state.couponCode ? { couponCode: state.couponCode } : {}),
     updatedAt: state.updatedAt,
   };
   storage.set(CART_STORAGE_KEY, persisted);

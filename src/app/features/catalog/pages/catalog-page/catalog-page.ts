@@ -18,7 +18,7 @@ import type {
 } from '@core/api';
 import { CategoryRepository, ProductRepository } from '@core/data-access';
 import type { Product, ProductCategory, Rating } from '@core/domain';
-import { ShoppingCartStore } from '@core/state';
+import { ShoppingCartStore, WishlistStore } from '@core/state';
 import { Button, Drawer, ProductCard } from '@shared/ui';
 
 import { ProductQuickViewModal } from '../../components/product-quick-view-modal/product-quick-view-modal';
@@ -142,6 +142,7 @@ export class CatalogPage {
   private readonly categoryRepository = inject(CategoryRepository);
   private readonly productRepository = inject(ProductRepository);
   private readonly shoppingCart = inject(ShoppingCartStore);
+  protected readonly wishlist = inject(WishlistStore);
 
   protected readonly filtersExpanded = signal(false);
   protected readonly quickViewProduct = signal<Product | null>(null);
@@ -300,6 +301,10 @@ export class CatalogPage {
 
   protected addProductToCart(product: Product): void {
     this.shoppingCart.addProduct(product);
+  }
+
+  protected toggleWishlist(product: Product): void {
+    this.wishlist.toggleProduct(product);
   }
 
   protected changeSort(event: Event): void {

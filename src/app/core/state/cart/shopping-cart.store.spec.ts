@@ -87,16 +87,72 @@ describe('ShoppingCartStore', () => {
 
   it('persists product snapshots and restores totals synchronously', () => {
     store.addProduct(apple, 2);
+    store.applyCoupon('fresh10');
     const persistedValue = storage.getItem('ecobazar:shopping-cart');
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({ providers: [{ provide: LOCAL_STORAGE, useValue: storage }] });
     const restoredStore = TestBed.inject(ShoppingCartStore);
 
-    expect(persistedValue).toContain('"version":1');
+    expect(persistedValue).toContain('"version":2');
+    expect(persistedValue).toContain('"couponCode":"FRESH10"');
     expect(restoredStore.itemCount()).toBe(2);
+    expect(restoredStore.appliedCoupon()?.code).toBe('FRESH10');
     expect(restoredStore.lines()[0]?.product).toEqual(apple);
     expect(restoredStore.subtotal().amount).toBe(apple.price.amount * 2);
+  });
+
+  it('calculates standard and free shipping from the subtotal', () => {
+    store.addProduct(apple);
+
+    expect(store.totals().shipping.amount).toBe(5);
+    expect(store.totals().total.amount).toBeCloseTo(apple.price.amount + 5, 2);
+
+    store.updateQuantity(apple.id, 4);
+
+    expect(store.subtotal().amount).toBeGreaterThanOrEqual(50);
+    expect(store.totals().shipping.amount).toBe(0);
+    expect(store.totals().total).toEqual(store.subtotal());
+  });
+
+  it('applies normalized percentage and fixed coupons to eligible carts', () => {
+    store.addProduct(apple, 2);
+
+    expect(store.applyCoupon(' fresh10 ')).toEqual({
+      status: 'applied',
+      message: 'FRESH10 was applied to your cart.',
+    });
+    expect(store.appliedCoupon()?.code).toBe('FRESH10');
+    expect(store.totals().discount.amount).toBe(
+      Math.round(apple.price.amount * 2 * 0.1 * 100) / 100,
+    );
+
+    expect(store.applyCoupon('SAVE5').status).toBe('applied');
+    expect(store.totals().discount.amount).toBe(5);
+
+    store.removeCoupon();
+    expect(store.appliedCoupon()).toBeNull();
+    expect(store.totals().discount.amount).toBe(0);
+  });
+
+  it('rejects invalid, ineligible, and empty-cart coupons', () => {
+    expect(store.applyCoupon('FRESH10').status).toBe('empty-cart');
+    store.addProduct(apple);
+
+    expect(store.applyCoupon('unknown').status).toBe('invalid');
+    expect(store.applyCoupon('FRESH10').status).toBe('minimum-not-met');
+    expect(store.appliedCoupon()).toBeNull();
+  });
+
+  it('removes an applied coupon when the subtotal drops below its minimum', () => {
+    store.addProduct(apple, 2);
+    expect(store.applyCoupon('FRESH10').status).toBe('applied');
+
+    store.updateQuantity(apple.id, 1);
+
+    expect(store.appliedCoupon()).toBeNull();
+    expect(store.cart().couponCode).toBeUndefined();
+    expect(store.totals().discount.amount).toBe(0);
   });
 
   it('clears state and its persisted snapshot', () => {

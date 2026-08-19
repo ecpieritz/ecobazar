@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -11,6 +12,7 @@ import {
 import { RouterLink } from '@angular/router';
 
 import type { Product, ProductUnit } from '@core/domain';
+import { WishlistStore } from '@core/state';
 import { Button, Rating } from '@shared/ui';
 
 export interface ProductCartSelection {
@@ -40,7 +42,8 @@ export class ProductSummary {
   readonly addRequested = output<ProductCartSelection>();
 
   protected readonly quantity = signal(1);
-  protected readonly wishlisted = signal(false);
+  private readonly wishlist = inject(WishlistStore);
+  protected readonly wishlisted = computed(() => this.wishlist.hasProduct(this.product().id));
   private activeProductId: Product['id'] | null = null;
   protected readonly unavailable = computed(
     () => this.product().inventory.status === 'out-of-stock',
@@ -69,7 +72,6 @@ export class ProductSummary {
       if (productId !== this.activeProductId) {
         this.activeProductId = productId;
         this.quantity.set(1);
-        this.wishlisted.set(false);
       }
     });
   }
@@ -95,6 +97,6 @@ export class ProductSummary {
   }
 
   protected toggleWishlist(): void {
-    this.wishlisted.update((wishlisted) => !wishlisted);
+    this.wishlist.toggleProduct(this.product());
   }
 }

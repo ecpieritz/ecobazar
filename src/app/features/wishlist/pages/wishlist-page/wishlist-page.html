@@ -1,0 +1,76 @@
+<main class="wishlist-page container">
+  <h1>My Wishlist</h1>
+
+  @if (feedback(); as message) {
+    <p class="wishlist-feedback" role="status">{{ message }}</p>
+  }
+
+  @if (wishlist.isEmpty()) {
+    <section class="empty-state">
+      <span aria-hidden="true">&#9825;</span>
+      <h2>Your wishlist is empty</h2>
+      <p>Save products you love and come back to them whenever you want.</p>
+      <a routerLink="/shop">Explore products</a>
+    </section>
+  } @else {
+    <section class="wishlist-table" aria-label="Saved products">
+      <div class="wishlist-table__heading" aria-hidden="true">
+        <span>Product</span><span>Price</span><span>Stock status</span><span></span>
+      </div>
+      <ul>
+        @for (product of wishlist.products(); track product.id) {
+          <li class="wishlist-line">
+            <div class="wishlist-line__product">
+              <a [routerLink]="['/shop', product.slug]">
+                @if (primaryImage(product); as image) {
+                  <img [src]="image.src" [alt]="image.alt" />
+                } @else {
+                  <span class="wishlist-line__placeholder" aria-hidden="true">?</span>
+                }
+              </a>
+              <a [routerLink]="['/shop', product.slug]">{{ product.name }}</a>
+            </div>
+            <p class="wishlist-line__price">
+              <span>Price</span>
+              <strong>{{ product.price.amount | currency: product.price.currency }}</strong>
+              @if (product.compareAtPrice; as compareAt) {
+                <s>{{ compareAt.amount | currency: compareAt.currency }}</s>
+              }
+            </p>
+            <p class="stock stock--{{ product.inventory.status }}">
+              @switch (product.inventory.status) {
+                @case ('out-of-stock') {
+                  Out of stock
+                }
+                @case ('low-stock') {
+                  Low stock
+                }
+                @default {
+                  In stock
+                }
+              }
+            </p>
+            <div class="wishlist-line__actions">
+              <button
+                type="button"
+                class="add-button"
+                [disabled]="product.inventory.status === 'out-of-stock'"
+                (click)="moveToCart(product)"
+              >
+                Add to cart
+              </button>
+              <button
+                type="button"
+                class="remove-button"
+                [attr.aria-label]="'Remove ' + product.name + ' from wishlist'"
+                (click)="removeProduct(product)"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</main>
