@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
@@ -11,7 +12,7 @@ describe('StorefrontHeader', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StorefrontHeader],
-      providers: [provideRouter([])],
+      providers: [provideHttpClient(), provideRouter([])],
     }).compileComponents();
     TestBed.inject(ShoppingCartStore).clear();
   });

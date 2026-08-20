@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { AuthStore } from '@core/auth';
 import { ShoppingCartStore, WishlistStore } from '@core/state';
 
 import { StorefrontNavigation } from './storefront-navigation';
@@ -35,6 +36,7 @@ export class StorefrontHeader {
   protected readonly searchTerm = signal('');
   protected readonly shoppingCart = inject(ShoppingCartStore);
   protected readonly wishlist = inject(WishlistStore);
+  protected readonly auth = inject(AuthStore);
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -80,6 +82,11 @@ export class StorefrontHeader {
   protected requestCart(): void {
     this.closeMenu();
     this.cartRequested.emit();
+  }
+
+  protected signOut(): void {
+    this.auth.logout();
+    void this.router.navigate(['/']);
   }
 
   @HostListener('document:keydown.escape')

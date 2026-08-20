@@ -1,0 +1,35 @@
+<div class="account-layout container">
+  <aside class="account-nav" aria-label="Account navigation">
+    <header>
+      <span class="account-nav__avatar" aria-hidden="true"
+        >{{ auth.customer()?.firstName?.charAt(0) }}{{ auth.customer()?.lastName?.charAt(0) }}</span
+      >
+      <div>
+        <strong>{{ auth.customer()?.firstName }} {{ auth.customer()?.lastName }}</strong
+        ><small>Customer</small>
+      </div>
+    </header>
+    <nav>
+      <a
+        routerLink="/account"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="is-active"
+        ><span aria-hidden="true">▦</span> Dashboard</a
+      >
+      <a routerLink="/account/orders" routerLinkActive="is-active"
+        ><span aria-hidden="true">↻</span> Order History</a
+      >
+      <a routerLink="/wishlist" routerLinkActive="is-active"
+        ><span aria-hidden="true">♡</span> Wishlist</a
+      >
+      <a routerLink="/cart" routerLinkActive="is-active"
+        ><span aria-hidden="true">▢</span> Shopping Cart</a
+      >
+      <a routerLink="/account/settings" routerLinkActive="is-active"
+        ><span aria-hidden="true">⚙</span> Settings</a
+      >
+      <button type="button" (click)="logout()"><span aria-hidden="true">↪</span> Log out</button>
+    </nav>
+  </aside>
+  <section class="account-content"><router-outlet /></section>
+</div>

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { breadcrumbRouteData } from '@layout/breadcrumb-banner/breadcrumb-item';
+import { authMatchGuard, guestGuard } from '@core/auth';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [guestGuard],
     title: 'Sign in | Ecobazar',
     data: breadcrumbRouteData({ label: 'Account', route: '/account' }, { label: 'Login' }),
     loadComponent: () =>
@@ -49,6 +51,7 @@ export const routes: Routes = [
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     title: 'Create account | Ecobazar',
     data: breadcrumbRouteData({ label: 'Account', route: '/account' }, { label: 'Create Account' }),
     loadComponent: () =>
@@ -58,6 +61,7 @@ export const routes: Routes = [
   },
   {
     path: 'account',
+    canMatch: [authMatchGuard],
     loadChildren: () =>
       import('@features/account/account.routes').then(({ ACCOUNT_ROUTES }) => ACCOUNT_ROUTES),
   },

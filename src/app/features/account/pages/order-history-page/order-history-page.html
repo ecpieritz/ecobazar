@@ -1,0 +1,78 @@
+<section class="panel history" aria-labelledby="history-title">
+  <header class="panel__header"><h1 id="history-title">Order History</h1></header>
+  @switch (state().status) {
+    @case ('loading') {
+      <p class="page-message">Loading order history…</p>
+    }
+    @case ('error') {
+      <p class="page-message" role="alert">Order history could not be loaded.</p>
+    }
+    @default {
+      @if (state().orders.length) {
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of state().orders; track order.id) {
+              <tr>
+                <td>#{{ order.id.replace('order-', '') }}</td>
+                <td>{{ order.placedAt | date: 'mediumDate' }}</td>
+                <td>
+                  {{ order.totals.total.amount | currency: order.totals.total.currency }} ({{
+                    order.items.length
+                  }}
+                  products)
+                </td>
+                <td>
+                  <span class="status status--{{ order.status }}">{{
+                    statusLabel(order.status)
+                  }}</span>
+                </td>
+                <td><a [routerLink]="[order.id]">View details</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (state().pagination.totalPages > 1) {
+          <nav class="pagination" aria-label="Order history pages">
+            <button
+              type="button"
+              aria-label="Previous page"
+              [disabled]="state().pagination.page === 1"
+              (click)="goToPage(state().pagination.page - 1)"
+            >
+              &larr;
+            </button>
+            @for (page of pageNumbers(); track page) {
+              <button
+                type="button"
+                [class.is-active]="page === state().pagination.page"
+                [attr.aria-current]="page === state().pagination.page ? 'page' : null"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            }
+            <button
+              type="button"
+              aria-label="Next page"
+              [disabled]="state().pagination.page === state().pagination.totalPages"
+              (click)="goToPage(state().pagination.page + 1)"
+            >
+              &rarr;
+            </button>
+          </nav>
+        }
+      } @else {
+        <p class="page-message">You have not placed any orders yet.</p>
+      }
+    }
+  }
+</section>

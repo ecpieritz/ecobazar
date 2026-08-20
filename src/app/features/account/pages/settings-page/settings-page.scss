@@ -1,0 +1,173 @@
+.settings {
+  display: grid;
+  gap: 1.25rem;
+}
+.settings-panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    h1,
+    h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+  }
+  form {
+    padding: 1.25rem;
+  }
+  label {
+    display: grid;
+    gap: 0.4rem;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    small {
+      display: inline;
+    }
+  }
+  input:not([type='file']) {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    &:focus {
+      border-color: var(--color-primary);
+      outline: 3px solid var(--color-focus-ring);
+    }
+  }
+  form > button,
+  .form-fields > button {
+    width: max-content;
+    padding: 0.7rem 1.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}
+.profile-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  gap: 2rem;
+  align-items: center;
+}
+.form-fields {
+  display: grid;
+  gap: 1rem;
+}
+.avatar-picker {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  text-align: center;
+  > div {
+    display: grid;
+    width: 9rem;
+    height: 9rem;
+    overflow: hidden;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-primary-subtle);
+    color: var(--color-success);
+    font-size: 2rem;
+    font-weight: 700;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  > label {
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 999px;
+    color: var(--color-primary-active);
+    cursor: pointer;
+  }
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  small {
+    color: var(--color-text-subtle);
+  }
+}
+.address-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.password-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.span-all {
+  grid-column: 1 / -1;
+}
+.password-control {
+  position: relative;
+  display: block;
+  input {
+    padding-right: 4rem !important;
+  }
+  button {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
+.settings-message {
+  margin: 0;
+  color: var(--color-success);
+  font-size: 0.85rem;
+  &--error {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    background: #fdeceb;
+    color: var(--color-danger);
+  }
+}
+.field-error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.8rem;
+}
+@media (max-width: 700px) {
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+  .avatar-picker {
+    grid-row: 1;
+  }
+  .address-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 500px) {
+  .address-form,
+  .password-form {
+    grid-template-columns: 1fr;
+  }
+  .span-all {
+    grid-column: 1;
+  }
+}

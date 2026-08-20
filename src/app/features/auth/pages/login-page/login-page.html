@@ -1,0 +1,62 @@
+<main class="auth-page container">
+  <section class="auth-card" aria-labelledby="login-title">
+    <h1 id="login-title">Sign In</h1>
+    <p class="auth-card__intro">Welcome back. Sign in to manage your orders and account.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label>
+        <span>Email</span>
+        <input
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          formControlName="email"
+        />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <small>Please enter a valid email address.</small>
+        }
+      </label>
+
+      <label>
+        <span>Password</span>
+        <span class="password-field">
+          <input
+            [type]="passwordVisible() ? 'text' : 'password'"
+            autocomplete="current-password"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <button
+            type="button"
+            [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+            [attr.aria-pressed]="passwordVisible()"
+            (click)="passwordVisible.update((value) => !value)"
+          >
+            {{ passwordVisible() ? 'Hide' : 'Show' }}
+          </button>
+        </span>
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <small>Password must contain at least 8 characters.</small>
+        }
+      </label>
+
+      <div class="auth-card__options">
+        <label class="checkbox"
+          ><input type="checkbox" formControlName="rememberMe" /> <span>Remember me</span></label
+        >
+        <a routerLink="/contact">Forgot password?</a>
+      </div>
+
+      @if (errorMessage(); as message) {
+        <p class="form-message form-message--error" role="alert">{{ message }}</p>
+      }
+
+      <button class="submit-button" type="submit" [disabled]="pending()">
+        {{ pending() ? 'Signing in…' : 'Sign In' }}
+      </button>
+    </form>
+
+    <p class="demo-credentials"><strong>Demo:</strong> demo@ecobazar.com / Password123!</p>
+    <p class="auth-card__switch">Don't have an account? <a routerLink="/register">Register</a></p>
+  </section>
+</main>

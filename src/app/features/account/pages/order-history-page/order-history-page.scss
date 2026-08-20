@@ -1,0 +1,24 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.25rem;
+  button {
+    display: grid;
+    width: 2.3rem;
+    height: 2.3rem;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    &.is-active {
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+    }
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}

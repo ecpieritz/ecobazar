@@ -23,9 +23,15 @@
           </select>
         </label>
         <span class="topbar__divider" aria-hidden="true"></span>
-        <a routerLink="/login">Sign In</a>
-        <span aria-hidden="true">/</span>
-        <a routerLink="/register">Sign Up</a>
+        @if (auth.isAuthenticated()) {
+          <a routerLink="/account">{{ auth.customer()?.firstName || 'My Account' }}</a>
+          <span aria-hidden="true">/</span>
+          <button class="topbar__action" type="button" (click)="signOut()">Sign Out</button>
+        } @else {
+          <a routerLink="/login">Sign In</a>
+          <span aria-hidden="true">/</span>
+          <a routerLink="/register">Sign Up</a>
+        }
       </div>
     </div>
   </div>

@@ -43,8 +43,17 @@ svg {
     background: var(--color-neutral-600);
   }
 
-  a:hover {
+  a:hover,
+  &__action:hover {
     color: var(--color-white);
+  }
+
+  &__action {
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    background: transparent;
+    border: 0;
   }
 
   select {

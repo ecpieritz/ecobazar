@@ -25,6 +25,8 @@ export const mockErrorResponse = (
   const statusText =
     {
       400: 'Bad Request',
+      401: 'Unauthorized',
+      409: 'Conflict',
       404: 'Not Found',
       405: 'Method Not Allowed',
     }[status] ?? 'Mock API Error';

@@ -4,12 +4,15 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { firstValueFrom } from 'rxjs';
 
 import type {
+  AuthResponse,
   CategoryListResponse,
+  OrderListResponse,
   ProductFilterOptionsResponse,
   ProductListResponse,
   ProductResponse,
   ReviewListResponse,
 } from '@core/api';
+import { MOCK_CUSTOMER_EMAIL, MOCK_CUSTOMER_PASSWORD } from '@core/mock-api/fixtures';
 
 import { mockApiInterceptor } from './mock-api.interceptor';
 
@@ -124,5 +127,33 @@ describe('mockApiInterceptor', () => {
     request.flush({ ready: true });
 
     await expect(responsePromise).resolves.toEqual({ ready: true });
+  });
+
+  it('should authenticate the demo customer and authorize account requests', async () => {
+    const auth = await firstValueFrom(
+      http.post<AuthResponse>('/api/auth/login', {
+        email: MOCK_CUSTOMER_EMAIL,
+        password: MOCK_CUSTOMER_PASSWORD,
+        rememberMe: true,
+      }),
+    );
+    const orders = await firstValueFrom(
+      http.get<OrderListResponse>('/api/orders?page=1&pageSize=3', {
+        headers: { Authorization: `Bearer ${auth.data.accessToken}` },
+      }),
+    );
+
+    expect(auth.data.customer.email).toBe(MOCK_CUSTOMER_EMAIL);
+    expect(orders.data).toHaveLength(3);
+    expect(orders.pagination.totalItems).toBeGreaterThan(3);
+  });
+
+  it('should reject protected account requests without a session token', async () => {
+    const request = firstValueFrom(http.get('/api/customers/me'));
+
+    await expect(request).rejects.toMatchObject({
+      status: 401,
+      error: { error: { code: 'UNAUTHORIZED' } },
+    });
   });
 });

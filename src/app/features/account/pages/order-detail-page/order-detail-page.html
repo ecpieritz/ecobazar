@@ -1,0 +1,124 @@
+@switch (state().status) {
+  @case ('loading') {
+    <section class="panel"><p class="page-message">Loading order details…</p></section>
+  }
+  @case ('error') {
+    <section class="panel">
+      <p class="page-message" role="alert">This order could not be found.</p>
+      <p class="detail-back"><a routerLink="/account/orders">Back to order history</a></p>
+    </section>
+  }
+  @default {
+    @if (state().order; as order) {
+      <article class="panel order-detail">
+        <header class="panel__header">
+          <div>
+            <h1>Order Details</h1>
+            <p>{{ order.placedAt | date: 'longDate' }} · {{ order.items.length }} products</p>
+          </div>
+          <a routerLink="/account/orders">Back to list</a>
+        </header>
+        <div class="address-grid">
+          <section>
+            <small>Billing address</small>
+            <h2>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}</h2>
+            <p>
+              {{ order.billingAddress.street }}<br />{{ order.billingAddress.city }},
+              {{ order.billingAddress.state }} {{ order.billingAddress.postalCode }}
+            </p>
+            <p>{{ order.billingAddress.email }}<br />{{ order.billingAddress.phone }}</p>
+          </section>
+          <section>
+            <small>Shipping address</small>
+            <h2>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</h2>
+            <p>
+              {{ order.shippingAddress.street }}<br />{{ order.shippingAddress.city }},
+              {{ order.shippingAddress.state }} {{ order.shippingAddress.postalCode }}
+            </p>
+            <p>{{ order.shippingAddress.email }}<br />{{ order.shippingAddress.phone }}</p>
+          </section>
+          <aside>
+            <p>
+              <small>Order ID</small><strong>#{{ order.id.replace('order-', '') }}</strong>
+            </p>
+            <p>
+              <small>Payment method</small
+              ><strong class="capitalize">{{ paymentLabel(order.paymentMethod) }}</strong>
+            </p>
+            <dl>
+              <div>
+                <dt>Subtotal</dt>
+                <dd>
+                  {{ order.totals.subtotal.amount | currency: order.totals.subtotal.currency }}
+                </dd>
+              </div>
+              <div>
+                <dt>Discount</dt>
+                <dd>
+                  &minus;{{
+                    order.totals.discount.amount | currency: order.totals.discount.currency
+                  }}
+                </dd>
+              </div>
+              <div>
+                <dt>Shipping</dt>
+                <dd>
+                  {{
+                    order.totals.shipping.amount === 0
+                      ? 'Free'
+                      : (order.totals.shipping.amount | currency: order.totals.shipping.currency)
+                  }}
+                </dd>
+              </div>
+              <div>
+                <dt>Total</dt>
+                <dd>{{ order.totals.total.amount | currency: order.totals.total.currency }}</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+        @if (order.status === 'cancelled') {
+          <p class="cancelled-notice">This order was cancelled.</p>
+        } @else {
+          <ol class="tracking" aria-label="Order progress">
+            @for (step of steps; track step; let index = $index) {
+              <li
+                [class.is-reached]="stepReached(order, step)"
+                [attr.aria-current]="order.status === step ? 'step' : null"
+              >
+                <span>{{ stepReached(order, step) ? '✓' : index + 1 }}</span
+                ><strong>{{ statusLabel(step) }}</strong>
+              </li>
+            }
+          </ol>
+        }
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of order.items; track item.productId) {
+              <tr>
+                <td>
+                  <a [routerLink]="['/shop', item.productSlug]"
+                    ><img [src]="item.image.src" [alt]="item.image.alt" />{{ item.productName }}</a
+                  >
+                </td>
+                <td>{{ item.unitPrice.amount | currency: item.unitPrice.currency }}</td>
+                <td>&times;{{ item.quantity }}</td>
+                <td>
+                  <strong>{{ item.subtotal.amount | currency: item.subtotal.currency }}</strong>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </article>
+    }
+  }
+}

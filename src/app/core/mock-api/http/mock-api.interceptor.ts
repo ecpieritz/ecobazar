@@ -10,6 +10,7 @@ import { mergeMap, Observable, of, throwError, timer } from 'rxjs';
 import { environment } from '@environments/environment';
 
 import { handleCatalogRequest } from '../handlers/catalog.mock-handler';
+import { handleAccountRequest } from '../handlers/account.mock-handler';
 import { mockErrorResponse, type MockApiResult } from './mock-api-response';
 
 const MOCK_ORIGIN = 'http://mock-api.local';
@@ -29,6 +30,7 @@ const handleMockRequest = (
   url: URL,
   apiPath: string,
 ): MockApiResult =>
+  handleAccountRequest(request, url, apiPath) ??
   handleCatalogRequest(request, url, apiPath) ??
   mockErrorResponse(
     request,

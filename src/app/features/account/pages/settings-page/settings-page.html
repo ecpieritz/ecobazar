@@ -1,0 +1,114 @@
+<div class="settings">
+  @if (errorMessage(); as message) {
+    <p class="settings-message settings-message--error" role="alert">{{ message }}</p>
+  }
+
+  <section class="settings-panel" aria-labelledby="profile-title">
+    <header><h1 id="profile-title">Account Settings</h1></header>
+    <form class="profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="form-fields">
+        <label
+          >First name<input type="text" autocomplete="given-name" formControlName="firstName"
+        /></label>
+        <label
+          >Last name<input type="text" autocomplete="family-name" formControlName="lastName"
+        /></label>
+        <label>Email<input type="email" autocomplete="email" formControlName="email" /></label>
+        <label>Phone number<input type="tel" autocomplete="tel" formControlName="phone" /></label>
+        @if (profileMessage(); as message) {
+          <p class="settings-message" role="status">{{ message }}</p>
+        }
+        <button type="submit" [disabled]="savingProfile()">
+          {{ savingProfile() ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
+      <div class="avatar-picker">
+        <div>
+          @if (profileForm.controls.avatarUrl.value; as avatar) {
+            <img [src]="avatar" alt="Profile preview" />
+          } @else {
+            <span
+              >{{ profileForm.controls.firstName.value.charAt(0)
+              }}{{ profileForm.controls.lastName.value.charAt(0) }}</span
+            >
+          }
+        </div>
+        <label for="avatar-file">Choose image</label
+        ><input id="avatar-file" type="file" accept="image/*" (change)="chooseAvatar($event)" />
+        <small>JPG or PNG, up to 2 MB.</small>
+      </div>
+    </form>
+  </section>
+
+  <section class="settings-panel" aria-labelledby="address-title">
+    <header><h2 id="address-title">Billing Address</h2></header>
+    <form class="address-form" [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+      <label>First name<input type="text" formControlName="firstName" /></label
+      ><label>Last name<input type="text" formControlName="lastName" /></label
+      ><label
+        >Company <small>(optional)</small><input type="text" formControlName="company"
+      /></label>
+      <label class="span-all"
+        >Street address<input type="text" autocomplete="street-address" formControlName="street"
+      /></label>
+      <label
+        >Country / Region<input
+          type="text"
+          autocomplete="country-name"
+          formControlName="country" /></label
+      ><label
+        >State<input type="text" autocomplete="address-level1" formControlName="state" /></label
+      ><label>City<input type="text" autocomplete="address-level2" formControlName="city" /></label>
+      <label
+        >Zip code<input
+          type="text"
+          autocomplete="postal-code"
+          formControlName="postalCode" /></label
+      ><label>Email<input type="email" autocomplete="email" formControlName="email" /></label
+      ><label>Phone<input type="tel" autocomplete="tel" formControlName="phone" /></label>
+      @if (addressMessage(); as message) {
+        <p class="settings-message span-all" role="status">{{ message }}</p>
+      }
+      <button type="submit" [disabled]="savingAddress()">
+        {{ savingAddress() ? 'Saving…' : 'Save changes' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="settings-panel" aria-labelledby="password-title">
+    <header><h2 id="password-title">Change Password</h2></header>
+    <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <label class="span-all"
+        >Current password<span class="password-control"
+          ><input
+            [type]="passwordVisible() ? 'text' : 'password'"
+            autocomplete="current-password"
+            formControlName="currentPassword"
+          /><button type="button" (click)="passwordVisible.update((value) => !value)">
+            {{ passwordVisible() ? 'Hide' : 'Show' }}
+          </button></span
+        ></label
+      >
+      <label
+        >New password<input
+          [type]="passwordVisible() ? 'text' : 'password'"
+          autocomplete="new-password"
+          formControlName="newPassword" /></label
+      ><label
+        >Confirm password<input
+          [type]="passwordVisible() ? 'text' : 'password'"
+          autocomplete="new-password"
+          formControlName="confirmPassword"
+      /></label>
+      @if (passwordForm.touched && passwordForm.hasError('passwordMismatch')) {
+        <p class="field-error span-all">Passwords must match.</p>
+      }
+      @if (passwordMessage(); as message) {
+        <p class="settings-message span-all" role="status">{{ message }}</p>
+      }
+      <button type="submit" [disabled]="savingPassword()">
+        {{ savingPassword() ? 'Changing…' : 'Change password' }}
+      </button>
+    </form>
+  </section>
+</div>

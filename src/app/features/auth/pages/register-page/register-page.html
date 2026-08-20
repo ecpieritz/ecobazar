@@ -1,0 +1,76 @@
+<main class="auth-page container">
+  <section class="auth-card auth-card--wide" aria-labelledby="register-title">
+    <h1 id="register-title">Create Account</h1>
+    <p class="auth-card__intro">Create your account to save favorites and follow every order.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field-row">
+        <label
+          ><span>First name</span
+          ><input type="text" autocomplete="given-name" formControlName="firstName" />
+          @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+            <small>Enter your first name.</small>
+          }
+        </label>
+        <label
+          ><span>Last name</span
+          ><input type="text" autocomplete="family-name" formControlName="lastName" />
+          @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+            <small>Enter your last name.</small>
+          }
+        </label>
+      </div>
+      <label
+        ><span>Email</span><input type="email" autocomplete="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <small>Enter a valid email address.</small>
+        }
+      </label>
+      <label>
+        <span>Password</span>
+        <span class="password-field"
+          ><input
+            [type]="passwordVisible() ? 'text' : 'password'"
+            autocomplete="new-password"
+            formControlName="password"
+          /><button
+            type="button"
+            [attr.aria-label]="passwordVisible() ? 'Hide passwords' : 'Show passwords'"
+            (click)="passwordVisible.update((value) => !value)"
+          >
+            {{ passwordVisible() ? 'Hide' : 'Show' }}
+          </button></span
+        >
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <small>Use at least 8 characters.</small>
+        }
+      </label>
+      <label
+        ><span>Confirm password</span
+        ><input
+          [type]="passwordVisible() ? 'text' : 'password'"
+          autocomplete="new-password"
+          formControlName="confirmPassword"
+        />
+        @if (form.controls.confirmPassword.touched && form.hasError('passwordMismatch')) {
+          <small>Passwords must match.</small>
+        }
+      </label>
+      <label class="checkbox"
+        ><input type="checkbox" formControlName="acceptedTerms" /><span
+          >I accept the terms and privacy policy.</span
+        ></label
+      >
+      @if (form.controls.acceptedTerms.touched && form.controls.acceptedTerms.invalid) {
+        <small class="standalone-error">You must accept the terms.</small>
+      }
+      @if (errorMessage(); as message) {
+        <p class="form-message form-message--error" role="alert">{{ message }}</p>
+      }
+      <button class="submit-button" type="submit" [disabled]="pending()">
+        {{ pending() ? 'Creating account…' : 'Create Account' }}
+      </button>
+    </form>
+    <p class="auth-card__switch">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </section>
+</main>
