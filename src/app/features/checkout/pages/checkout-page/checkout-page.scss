@@ -1,0 +1,215 @@
+@use 'abstracts' as *;
+
+.checkout-page {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+.checkout-details {
+  min-width: 0;
+}
+.form-section {
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+  h1,
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.5rem;
+  }
+  label {
+    display: grid;
+    gap: 0.45rem;
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+  em {
+    color: var(--color-text-muted);
+    font-style: normal;
+    font-weight: 400;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 2.9rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    &:focus {
+      border-color: var(--color-primary);
+      outline: 2px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    }
+    &.ng-invalid.ng-touched {
+      border-color: var(--color-danger);
+    }
+  }
+  textarea {
+    min-height: 6.5rem;
+    resize: vertical;
+  }
+  small,
+  .section-error {
+    margin: 0;
+    color: var(--color-danger);
+    font-size: 0.72rem;
+    font-weight: 400;
+  }
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  &--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.checkbox-field {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  padding-block: 1.25rem 2rem;
+  font-size: 0.88rem;
+  input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-primary);
+  }
+}
+.additional-info {
+  padding-top: 2rem;
+  border-bottom: 0;
+}
+.order-summary {
+  position: sticky;
+  top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+  }
+}
+.summary-products {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0 0 1rem;
+  border-bottom: 1px solid var(--color-border);
+  list-style: none;
+  li {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    align-items: center;
+    font-size: 0.82rem;
+  }
+  img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+  }
+  small {
+    color: var(--color-text-muted);
+  }
+  strong {
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+}
+.summary-totals {
+  margin: 0;
+  div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  dt,
+  dd {
+    margin: 0;
+  }
+  dd {
+    font-weight: 600;
+  }
+  .discount dd {
+    color: var(--color-primary-active);
+  }
+  .total {
+    border-bottom: 0;
+    font-size: 1.05rem;
+  }
+}
+.payment-methods {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0.5rem 0 1.25rem;
+  padding: 0;
+  border: 0;
+  legend {
+    margin-bottom: 0.85rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  label {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  input {
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: var(--color-primary);
+  }
+}
+.checkout-error {
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #fdeceb;
+  color: var(--color-danger);
+  font-size: 0.8rem;
+}
+.place-order {
+  width: 100%;
+  padding: 0.85rem 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: 600;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 991px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .order-summary {
+    position: static;
+  }
+}
+@media (max-width: 680px) {
+  .form-grid,
+  .form-grid--three {
+    grid-template-columns: 1fr;
+  }
+}

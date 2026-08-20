@@ -4,19 +4,38 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { firstValueFrom } from 'rxjs';
 
 import type {
+  AddressPayload,
   AuthResponse,
   CategoryListResponse,
   OrderListResponse,
+  OrderResponse,
   ProductFilterOptionsResponse,
   ProductListResponse,
   ProductResponse,
   ReviewListResponse,
 } from '@core/api';
-import { MOCK_CUSTOMER_EMAIL, MOCK_CUSTOMER_PASSWORD } from '@core/mock-api/fixtures';
+import {
+  MOCK_BILLING_ADDRESS,
+  MOCK_CUSTOMER_EMAIL,
+  MOCK_CUSTOMER_PASSWORD,
+  PRODUCTS_FIXTURE,
+} from '@core/mock-api/fixtures';
 
 import { mockApiInterceptor } from './mock-api.interceptor';
 
 describe('mockApiInterceptor', () => {
+  const checkoutAddress: AddressPayload = {
+    firstName: MOCK_BILLING_ADDRESS.firstName,
+    lastName: MOCK_BILLING_ADDRESS.lastName,
+    company: MOCK_BILLING_ADDRESS.company,
+    street: MOCK_BILLING_ADDRESS.street,
+    city: MOCK_BILLING_ADDRESS.city,
+    state: MOCK_BILLING_ADDRESS.state,
+    postalCode: MOCK_BILLING_ADDRESS.postalCode,
+    country: MOCK_BILLING_ADDRESS.country,
+    email: MOCK_BILLING_ADDRESS.email,
+    phone: MOCK_BILLING_ADDRESS.phone,
+  };
   let http: HttpClient;
   let httpTesting: HttpTestingController;
 
@@ -154,6 +173,71 @@ describe('mockApiInterceptor', () => {
     await expect(request).rejects.toMatchObject({
       status: 401,
       error: { error: { code: 'UNAUTHORIZED' } },
+    });
+  });
+
+  it('should place an order and include it in the customer history', async () => {
+    const auth = await firstValueFrom(
+      http.post<AuthResponse>('/api/auth/login', {
+        email: MOCK_CUSTOMER_EMAIL,
+        password: MOCK_CUSTOMER_PASSWORD,
+        rememberMe: true,
+      }),
+    );
+    const headers = { Authorization: `Bearer ${auth.data.accessToken}` };
+    const before = await firstValueFrom(
+      http.get<OrderListResponse>('/api/orders?page=1&pageSize=50', { headers }),
+    );
+    const created = await firstValueFrom(
+      http.post<OrderResponse>(
+        '/api/orders',
+        {
+          items: [{ productId: PRODUCTS_FIXTURE[0].id, quantity: 2 }],
+          billingAddress: checkoutAddress,
+          shippingAddress: checkoutAddress,
+          paymentMethod: 'paypal',
+          couponCode: 'FRESH10',
+          notes: 'Leave at the front desk.',
+        },
+        { headers },
+      ),
+    );
+    const after = await firstValueFrom(
+      http.get<OrderListResponse>('/api/orders?page=1&pageSize=50', { headers }),
+    );
+
+    expect(created.data.status).toBe('received');
+    expect(created.data.paymentMethod).toBe('paypal');
+    expect(created.data.notes).toBe('Leave at the front desk.');
+    expect(after.pagination.totalItems).toBe(before.pagination.totalItems + 1);
+    expect(after.data[0].id).toBe(created.data.id);
+  });
+
+  it('should reject order quantities that exceed current stock', async () => {
+    const auth = await firstValueFrom(
+      http.post<AuthResponse>('/api/auth/login', {
+        email: MOCK_CUSTOMER_EMAIL,
+        password: MOCK_CUSTOMER_PASSWORD,
+        rememberMe: true,
+      }),
+    );
+    const product = PRODUCTS_FIXTURE[0];
+    const request = firstValueFrom(
+      http.post(
+        '/api/orders',
+        {
+          items: [{ productId: product.id, quantity: product.inventory.quantity + 1 }],
+          billingAddress: checkoutAddress,
+          shippingAddress: checkoutAddress,
+          paymentMethod: 'cash-on-delivery',
+        },
+        { headers: { Authorization: `Bearer ${auth.data.accessToken}` } },
+      ),
+    );
+
+    await expect(request).rejects.toMatchObject({
+      status: 409,
+      error: { error: { code: 'STOCK_UNAVAILABLE' } },
     });
   });
 });

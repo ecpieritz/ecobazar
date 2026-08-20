@@ -6,6 +6,7 @@ import {
   API_ENDPOINTS,
   type OrderListQuery,
   type OrderListResponse,
+  type PlaceOrderRequest,
   type OrderResponse,
 } from '@core/api';
 import type { Order } from '@core/domain';
@@ -26,6 +27,12 @@ export class OrderRepository {
   getOrder(orderId: string): Observable<Order> {
     return this.http
       .get<OrderResponse>(apiUrl(API_ENDPOINTS.orders.byId(orderId)))
+      .pipe(map(({ data }) => data));
+  }
+
+  placeOrder(request: PlaceOrderRequest): Observable<Order> {
+    return this.http
+      .post<OrderResponse>(apiUrl(API_ENDPOINTS.orders.collection), request)
       .pipe(map(({ data }) => data));
   }
 }

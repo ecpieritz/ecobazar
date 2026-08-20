@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { breadcrumbRouteData } from '@layout/breadcrumb-banner/breadcrumb-item';
-import { authMatchGuard, guestGuard } from '@core/auth';
+import { authGuard, authMatchGuard, guestGuard } from '@core/auth';
 
 export const routes: Routes = [
   {
@@ -34,6 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'checkout',
+    canActivate: [authGuard],
     title: 'Checkout | Ecobazar',
     data: breadcrumbRouteData({ label: 'Shopping Cart', route: '/cart' }, { label: 'Checkout' }),
     loadComponent: () =>

@@ -1,0 +1,275 @@
+<main class="checkout-page container">
+  @if (placedOrder(); as order) {
+    <section class="order-confirmation" aria-labelledby="confirmation-title">
+      <span class="order-confirmation__icon" aria-hidden="true">✓</span>
+      <p class="eyebrow">Order received</p>
+      <h1 id="confirmation-title">Thank you for your order!</h1>
+      <p>
+        Your order <strong>#{{ order.id.replace('order-', '') }}</strong> was created successfully.
+        You can follow its progress from your account.
+      </p>
+      <div class="order-confirmation__actions">
+        <a class="primary-action" [routerLink]="['/account/orders', order.id]">View order</a>
+        <a class="secondary-action" routerLink="/shop">Continue shopping</a>
+      </div>
+    </section>
+  } @else if (cart.isEmpty()) {
+    <section class="checkout-empty" aria-labelledby="empty-checkout-title">
+      <span aria-hidden="true">🛒</span>
+      <h1 id="empty-checkout-title">Your cart is empty</h1>
+      <p>Add fresh products to your cart before starting checkout.</p>
+      <a class="primary-action" routerLink="/shop">Return to shop</a>
+    </section>
+  } @else {
+    <form class="checkout-layout" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="checkout-details">
+        <section class="form-section" formGroupName="billing" aria-labelledby="billing-title">
+          <h1 id="billing-title">Billing Information</h1>
+          <div class="form-grid form-grid--three">
+            <label>
+              <span>First name</span>
+              <input type="text" autocomplete="given-name" formControlName="firstName" />
+              @if (
+                form.controls.billing.controls.firstName.touched &&
+                form.controls.billing.controls.firstName.invalid
+              ) {
+                <small>Please enter your first name.</small>
+              }
+            </label>
+            <label>
+              <span>Last name</span>
+              <input type="text" autocomplete="family-name" formControlName="lastName" />
+              @if (
+                form.controls.billing.controls.lastName.touched &&
+                form.controls.billing.controls.lastName.invalid
+              ) {
+                <small>Please enter your last name.</small>
+              }
+            </label>
+            <label>
+              <span>Company <em>(optional)</em></span>
+              <input type="text" autocomplete="organization" formControlName="company" />
+            </label>
+          </div>
+          <label>
+            <span>Street address</span>
+            <input type="text" autocomplete="street-address" formControlName="street" />
+            @if (
+              form.controls.billing.controls.street.touched &&
+              form.controls.billing.controls.street.invalid
+            ) {
+              <small>Please enter your street address.</small>
+            }
+          </label>
+          <div class="form-grid form-grid--three">
+            <label>
+              <span>City</span>
+              <input type="text" autocomplete="address-level2" formControlName="city" />
+            </label>
+            <label>
+              <span>Country / Region</span>
+              <select autocomplete="country-name" formControlName="country">
+                <option value="">Select country</option>
+                @for (country of countries; track country) {
+                  <option [value]="country">{{ country }}</option>
+                }
+              </select>
+            </label>
+            <label>
+              <span>State</span>
+              <select autocomplete="address-level1" formControlName="state">
+                <option value="">Select state</option>
+                @for (state of states; track state) {
+                  <option [value]="state">{{ state }}</option>
+                }
+              </select>
+            </label>
+          </div>
+          <div class="form-grid form-grid--three">
+            <label>
+              <span>ZIP code</span>
+              <input type="text" autocomplete="postal-code" formControlName="postalCode" />
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" autocomplete="email" formControlName="email" />
+              @if (
+                form.controls.billing.controls.email.touched &&
+                form.controls.billing.controls.email.invalid
+              ) {
+                <small>Please enter a valid email address.</small>
+              }
+            </label>
+            <label>
+              <span>Phone</span>
+              <input type="tel" autocomplete="tel" formControlName="phone" />
+              @if (
+                form.controls.billing.controls.phone.touched &&
+                form.controls.billing.controls.phone.invalid
+              ) {
+                <small>Please enter a valid phone number.</small>
+              }
+            </label>
+          </div>
+        </section>
+
+        <label class="checkbox-field">
+          <input type="checkbox" formControlName="shipToDifferentAddress" />
+          <span>Ship to a different address</span>
+        </label>
+
+        @if (form.controls.shipToDifferentAddress.value) {
+          <section class="form-section" formGroupName="shipping" aria-labelledby="shipping-title">
+            <h2 id="shipping-title">Shipping Information</h2>
+            <div class="form-grid form-grid--three">
+              <label
+                ><span>First name</span
+                ><input type="text" autocomplete="shipping given-name" formControlName="firstName"
+              /></label>
+              <label
+                ><span>Last name</span
+                ><input type="text" autocomplete="shipping family-name" formControlName="lastName"
+              /></label>
+              <label
+                ><span>Company <em>(optional)</em></span
+                ><input type="text" autocomplete="shipping organization" formControlName="company"
+              /></label>
+            </div>
+            <label
+              ><span>Street address</span
+              ><input type="text" autocomplete="shipping street-address" formControlName="street"
+            /></label>
+            <div class="form-grid form-grid--three">
+              <label
+                ><span>City</span
+                ><input type="text" autocomplete="shipping address-level2" formControlName="city"
+              /></label>
+              <label
+                ><span>Country / Region</span
+                ><select autocomplete="shipping country-name" formControlName="country">
+                  <option value="">Select country</option>
+                  @for (country of countries; track country) {
+                    <option [value]="country">{{ country }}</option>
+                  }
+                </select></label
+              >
+              <label
+                ><span>State</span
+                ><select autocomplete="shipping address-level1" formControlName="state">
+                  <option value="">Select state</option>
+                  @for (state of states; track state) {
+                    <option [value]="state">{{ state }}</option>
+                  }
+                </select></label
+              >
+            </div>
+            <div class="form-grid form-grid--three">
+              <label
+                ><span>ZIP code</span
+                ><input
+                  type="text"
+                  autocomplete="shipping postal-code"
+                  formControlName="postalCode"
+              /></label>
+              <label
+                ><span>Email</span
+                ><input type="email" autocomplete="shipping email" formControlName="email"
+              /></label>
+              <label
+                ><span>Phone</span
+                ><input type="tel" autocomplete="shipping tel" formControlName="phone"
+              /></label>
+            </div>
+            @if (form.controls.shipping.touched && form.controls.shipping.invalid) {
+              <p class="section-error" role="alert">Complete all required shipping fields.</p>
+            }
+          </section>
+        }
+
+        <section class="form-section additional-info" aria-labelledby="additional-title">
+          <h2 id="additional-title">Additional Info</h2>
+          <label>
+            <span>Order notes <em>(optional)</em></span>
+            <textarea
+              rows="4"
+              maxlength="500"
+              formControlName="notes"
+              placeholder="Notes about your order, e.g. special notes for delivery"
+            ></textarea>
+          </label>
+        </section>
+      </div>
+
+      <aside class="order-summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Order Summary</h2>
+        <ul class="summary-products">
+          @for (line of cart.lines(); track line.product.id) {
+            <li>
+              @if (line.product.images[0]; as image) {
+                <img [src]="image.src" [alt]="image.alt" />
+              }
+              <span
+                >{{ line.product.name }} <small>×{{ line.quantity }}</small></span
+              >
+              <strong>{{ line.subtotal.amount | currency: line.subtotal.currency }}</strong>
+            </li>
+          }
+        </ul>
+        <dl class="summary-totals">
+          <div>
+            <dt>Subtotal</dt>
+            <dd>{{ cart.totals().subtotal.amount | currency: cart.totals().subtotal.currency }}</dd>
+          </div>
+          @if (cart.totals().discount.amount > 0) {
+            <div class="discount">
+              <dt>Discount ({{ cart.appliedCoupon()?.code }})</dt>
+              <dd>
+                −{{ cart.totals().discount.amount | currency: cart.totals().discount.currency }}
+              </dd>
+            </div>
+          }
+          <div>
+            <dt>Shipping</dt>
+            <dd>
+              {{
+                cart.totals().shipping.amount === 0
+                  ? 'Free'
+                  : (cart.totals().shipping.amount | currency: cart.totals().shipping.currency)
+              }}
+            </dd>
+          </div>
+          <div class="total">
+            <dt>Total</dt>
+            <dd>{{ cart.totals().total.amount | currency: cart.totals().total.currency }}</dd>
+          </div>
+        </dl>
+
+        <fieldset class="payment-methods">
+          <legend>Payment Method</legend>
+          <label
+            ><input type="radio" value="cash-on-delivery" formControlName="paymentMethod" /><span
+              >Cash on Delivery</span
+            ></label
+          >
+          <label
+            ><input type="radio" value="paypal" formControlName="paymentMethod" /><span
+              >PayPal</span
+            ></label
+          >
+          <label
+            ><input type="radio" value="amazon-pay" formControlName="paymentMethod" /><span
+              >Amazon Pay</span
+            ></label
+          >
+        </fieldset>
+
+        @if (errorMessage(); as message) {
+          <p class="checkout-error" role="alert">{{ message }}</p>
+        }
+        <button class="place-order" type="submit" [disabled]="pending() || !!stockIssue()">
+          {{ pending() ? 'Placing order…' : 'Place Order' }}
+        </button>
+      </aside>
+    </form>
+  }
+</main>
