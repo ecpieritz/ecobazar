@@ -16,6 +16,7 @@ describe('NewsletterSignup', () => {
     expect(element.querySelector('input[type="email"]')?.hasAttribute('required')).toBe(true);
     expect(element.querySelector('[aria-live="polite"]')).toBeTruthy();
     expect(element.querySelectorAll('.social-links a')).toHaveLength(4);
+    expect(element.querySelectorAll('.social-links svg')).toHaveLength(4);
   });
 
   it('should acknowledge a valid subscription and reset the email field', () => {

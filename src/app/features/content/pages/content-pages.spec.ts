@@ -33,7 +33,15 @@ describe('institutional content pages', () => {
 
     expect(element.querySelectorAll('details')).toHaveLength(8);
     expect(element.querySelectorAll('summary')).toHaveLength(8);
-    expect((element.querySelector('details') as HTMLDetailsElement).open).toBe(true);
+    const details = [...element.querySelectorAll('details')] as HTMLDetailsElement[];
+    expect(details[0].open).toBe(true);
+
+    (details[1].querySelector('summary') as HTMLElement).click();
+    fixture.detectChanges();
+
+    expect(details[0].open).toBe(false);
+    expect(details[1].open).toBe(true);
+    expect(details.filter(({ open }) => open)).toHaveLength(1);
   });
 
   it('should validate and complete the mocked contact submission', () => {

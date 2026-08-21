@@ -6,9 +6,9 @@
     <a href="mailto:help@ecobazar.example">Still need help? Contact us</a>
   </section>
   <section class="faq-list" aria-label="Frequently asked questions">
-    @for (item of questions; track item.question; let first = $first) {
-      <details [attr.open]="first ? '' : null">
-        <summary>
+    @for (item of questions; track item.question; let index = $index) {
+      <details [open]="openQuestion() === index">
+        <summary (click)="toggleQuestion(index, $event)">
           <span>{{ item.question }}</span
           ><span class="faq-icon" aria-hidden="true"></span>
         </summary>

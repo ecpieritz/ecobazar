@@ -61,7 +61,6 @@
     place-items: center;
     width: 2.5rem;
     height: 2.5rem;
-    font-weight: var(--font-weight-semibold);
     border-radius: 50%;
 
     &:hover {
@@ -72,6 +71,7 @@
 
   svg {
     width: 1.125rem;
+    height: 1.125rem;
     fill: none;
     stroke: currentcolor;
     stroke-width: 1.8;
@@ -88,5 +88,16 @@
     grid-template-columns: minmax(15rem, 0.8fr) minmax(20rem, 1.4fr) auto;
     align-items: center;
     padding-block: var(--space-10);
+  }
+
+  .newsletter__form-area {
+    position: relative;
+  }
+
+  app-feedback-message {
+    position: absolute;
+    inset-block-start: calc(100% + var(--space-2));
+    inset-inline: 0;
+    margin-block-start: 0;
   }
 }

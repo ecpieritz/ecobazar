@@ -100,7 +100,10 @@ svg {
   }
 }
 
-details summary {
+.primary-navigation details summary {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
   cursor: pointer;
   list-style: none;
 
@@ -109,9 +112,20 @@ details summary {
   }
 
   &::after {
-    margin-inline-start: var(--space-2);
-    content: '⌄';
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-block-start: -0.2rem;
+    border-right: 1.5px solid currentcolor;
+    border-bottom: 1.5px solid currentcolor;
+    content: '';
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) var(--easing-standard);
   }
+}
+
+.primary-navigation details[open] summary::after {
+  margin-block-start: 0.2rem;
+  transform: rotate(-135deg);
 }
 
 .pages-menu {

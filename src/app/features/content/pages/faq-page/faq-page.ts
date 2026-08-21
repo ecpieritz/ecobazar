@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-faq-page',
@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FaqPage {
+  protected readonly openQuestion = signal<number | null>(0);
   protected readonly questions = [
     {
       question: 'How does the mocked checkout work?',
@@ -49,4 +50,9 @@ export class FaqPage {
         'No. Ecobazar is a frontend portfolio project focused on modern Angular, strict TypeScript, signals, reactive forms, and accessible UI patterns.',
     },
   ] as const;
+
+  protected toggleQuestion(index: number, event: Event): void {
+    event.preventDefault();
+    this.openQuestion.update((current) => (current === index ? null : index));
+  }
 }
