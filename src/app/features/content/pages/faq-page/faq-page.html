@@ -1,0 +1,19 @@
+<div class="faq-page container">
+  <section class="faq-copy" aria-labelledby="faq-title">
+    <p class="eyebrow">Help center</p>
+    <h1 id="faq-title">Welcome, let&rsquo;s talk about Ecobazar</h1>
+    <p>Answers to common questions about this mocked Angular storefront.</p>
+    <a href="mailto:help@ecobazar.example">Still need help? Contact us</a>
+  </section>
+  <section class="faq-list" aria-label="Frequently asked questions">
+    @for (item of questions; track item.question; let first = $first) {
+      <details [attr.open]="first ? '' : null">
+        <summary>
+          <span>{{ item.question }}</span
+          ><span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <p>{{ item.answer }}</p>
+      </details>
+    }
+  </section>
+</div>

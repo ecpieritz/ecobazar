@@ -106,7 +106,14 @@
               <tr>
                 <td>
                   <a [routerLink]="['/shop', item.productSlug]"
-                    ><img [src]="item.image.src" [alt]="item.image.alt" />{{ item.productName }}</a
+                    ><img
+                      [src]="item.image.src"
+                      [alt]="item.image.alt"
+                      width="1254"
+                      height="1254"
+                      loading="lazy"
+                      decoding="async"
+                    />{{ item.productName }}</a
                   >
                 </td>
                 <td>{{ item.unitPrice.amount | currency: item.unitPrice.currency }}</td>

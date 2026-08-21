@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-not-found-page',
-  template: `
-    <main class="container">
-      <h1>Page not found</h1>
-    </main>
-  `,
+  imports: [RouterLink],
+  templateUrl: './not-found-page.html',
+  styleUrl: './not-found-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotFoundPage {}

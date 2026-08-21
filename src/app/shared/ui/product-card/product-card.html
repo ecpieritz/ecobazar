@@ -33,7 +33,14 @@
       aria-hidden="true"
     >
       @if (primaryImage(); as image) {
-        <img [src]="image.src" [alt]="image.alt" loading="lazy" />
+        <img
+          [src]="image.src"
+          [alt]="image.alt"
+          width="1254"
+          height="1254"
+          loading="lazy"
+          decoding="async"
+        />
       } @else {
         <span class="product-card__image-placeholder">Image unavailable</span>
       }

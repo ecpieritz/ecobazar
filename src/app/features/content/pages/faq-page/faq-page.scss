@@ -1,0 +1,109 @@
+.faq-page {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: start;
+  padding-block: clamp(3rem, 8vw, 7rem);
+}
+.faq-copy {
+  position: sticky;
+  top: 2rem;
+  .eyebrow {
+    margin-bottom: 0.75rem;
+    color: var(--color-primary-active);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  h1 {
+    max-width: 13ch;
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.15;
+  }
+  > p:not(.eyebrow) {
+    max-width: 34rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  a {
+    display: inline-flex;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.25rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-weight: 600;
+  }
+}
+.faq-list {
+  display: grid;
+  gap: 0.75rem;
+  details {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  details[open] {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.15rem 1.25rem;
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+    &::-webkit-details-marker {
+      display: none;
+    }
+    &:focus-visible {
+      outline: 3px solid var(--color-primary-subtle);
+      outline-offset: -3px;
+    }
+  }
+  p {
+    padding: 0 1.25rem 1.25rem;
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+}
+.faq-icon {
+  position: relative;
+  flex: 0 0 1.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--color-surface-muted);
+  &::before,
+  &::after {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 0.75rem;
+    height: 2px;
+    background: currentcolor;
+    content: '';
+    transform: translate(-50%, -50%);
+  }
+  &::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform 0.2s ease;
+  }
+}
+details[open] .faq-icon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+@media (max-width: 800px) {
+  .faq-page {
+    grid-template-columns: 1fr;
+  }
+  .faq-copy {
+    position: static;
+  }
+}

@@ -32,6 +32,11 @@
     min-height: 100dvh;
   }
 
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
   ul[role='list'],
   ol[role='list'] {
     padding: 0;
@@ -46,6 +51,10 @@
   video {
     display: block;
     max-width: 100%;
+  }
+
+  :where(p, h1, h2, h3, h4, a, button, td, th) {
+    overflow-wrap: anywhere;
   }
 
   img,

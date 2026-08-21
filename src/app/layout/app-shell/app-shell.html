@@ -1,9 +1,11 @@
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<app-notification-outlet />
 <app-storefront-header [cartOpen]="cartDrawerOpen()" (cartRequested)="cartDrawerOpen.set(true)" />
 <app-shopping-cart-drawer [(open)]="cartDrawerOpen" />
 @if (breadcrumbs().length > 0) {
   <app-breadcrumb-banner [items]="breadcrumbs()" />
 }
-<main>
+<main id="main-content" tabindex="-1">
   <router-outlet />
 </main>
 <app-newsletter-signup />

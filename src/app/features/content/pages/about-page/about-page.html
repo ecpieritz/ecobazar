@@ -1,0 +1,100 @@
+<div class="about-page">
+  <section class="about-intro container" aria-labelledby="about-title">
+    <div>
+      <p class="eyebrow">Our story</p>
+      <h1 id="about-title">100% trusted organic food store</h1>
+      <p>
+        Ecobazar connects people with fresh, seasonal produce from growers who care about quality,
+        responsible farming, and their communities.
+      </p>
+    </div>
+    <img
+      src="/images/articles/organic-farming.jpg"
+      alt="Farmers working together in an organic field"
+      width="768"
+      height="480"
+      fetchpriority="high"
+    />
+  </section>
+
+  <section class="about-story" aria-labelledby="mission-title">
+    <div class="container about-story__content">
+      <img
+        src="/images/home/newsletter-promotion.jpg"
+        alt="Shopper carrying a basket of fresh vegetables"
+        width="800"
+        height="800"
+        loading="lazy"
+      />
+      <div>
+        <p class="eyebrow">Why Ecobazar</p>
+        <h2 id="mission-title">Fresh food, delivered with purpose</h2>
+        <p>
+          Our mock storefront demonstrates a complete modern shopping experience while celebrating
+          produce that is local, traceable, and naturally delicious.
+        </p>
+        <ul role="list">
+          @for (benefit of benefits; track benefit.title) {
+            <li>
+              <span aria-hidden="true">&#10003;</span>
+              <div>
+                <strong>{{ benefit.title }}</strong>
+                <p>{{ benefit.text }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-team container" aria-labelledby="team-title">
+    <header>
+      <p class="eyebrow">People behind the store</p>
+      <h2 id="team-title">Our awesome team</h2>
+      <p>A small team focused on accessible experiences and better food choices.</p>
+    </header>
+    <ul role="list">
+      @for (member of team; track member.name) {
+        <li>
+          <article>
+            <img [src]="member.image" [alt]="member.name" width="480" height="420" loading="lazy" />
+            <div>
+              <h3>{{ member.name }}</h3>
+              <p>{{ member.role }}</p>
+            </div>
+          </article>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="about-testimonials" aria-labelledby="about-testimonials-title">
+    <div class="container">
+      <header>
+        <p class="eyebrow">Customer stories</p>
+        <h2 id="about-testimonials-title">What our clients say</h2>
+      </header>
+      <ul role="list">
+        @for (testimonial of testimonials; track testimonial.name) {
+          <li>
+            <figure>
+              <span aria-hidden="true">&ldquo;</span>
+              <blockquote>{{ testimonial.quote }}</blockquote>
+              <figcaption>{{ testimonial.name }} <small>Customer</small></figcaption>
+            </figure>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-partners container" aria-labelledby="partners-title">
+    <h2 id="partners-title" class="visually-hidden">Trusted partners</h2>
+    <ul role="list">
+      @for (partner of partners; track partner) {
+        <li>{{ partner }}</li>
+      }
+    </ul>
+  </section>
+</div>

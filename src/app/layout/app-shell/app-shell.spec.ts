@@ -6,6 +6,7 @@ import { provideRouter, Router, RouterOutlet } from '@angular/router';
 import { BreadcrumbBanner } from '../breadcrumb-banner/breadcrumb-banner';
 import { breadcrumbRouteData } from '../breadcrumb-banner/breadcrumb-item';
 import { NewsletterSignup } from '../newsletter-signup/newsletter-signup';
+import { NotificationOutlet } from '../notification-outlet/notification-outlet';
 import { StorefrontFooter } from '../storefront-footer/storefront-footer';
 import { AppShell } from './app-shell';
 import { ShoppingCartDrawer } from '../shopping-cart-drawer/shopping-cart-drawer';
@@ -63,7 +64,13 @@ describe('AppShell', () => {
     expect(fixture.debugElement.query(By.directive(ShoppingCartDrawer))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(RouterOutlet))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(NewsletterSignup))).toBeTruthy();
+    expect(fixture.debugElement.query(By.directive(NotificationOutlet))).toBeTruthy();
     expect(fixture.debugElement.query(By.directive(StorefrontFooter))).toBeTruthy();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.skip-link')?.getAttribute('href')).toBe(
+      '#main-content',
+    );
+    expect(fixture.nativeElement.querySelector('main')?.getAttribute('tabindex')).toBe('-1');
   });
 
   it('should open the shared cart drawer from the header trigger', () => {

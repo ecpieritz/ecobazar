@@ -2,7 +2,14 @@
   <section class="profile-card panel">
     <div class="profile-card__avatar">
       @if (auth.customer()?.avatarUrl; as avatar) {
-        <img [src]="avatar" alt="Profile" />
+        <img
+          [src]="avatar"
+          alt="Profile"
+          width="160"
+          height="160"
+          loading="lazy"
+          decoding="async"
+        />
       } @else {
         <span
           >{{ auth.customer()?.firstName?.charAt(0)

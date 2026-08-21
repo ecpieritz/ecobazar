@@ -21,7 +21,14 @@
               <div class="cart-line__product">
                 <a [routerLink]="['/shop', line.product.slug]">
                   @if (primaryImage(line.product); as image) {
-                    <img [src]="image.src" [alt]="image.alt" />
+                    <img
+                      [src]="image.src"
+                      [alt]="image.alt"
+                      width="1254"
+                      height="1254"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   } @else {
                     <span class="cart-line__placeholder" aria-hidden="true">?</span>
                   }

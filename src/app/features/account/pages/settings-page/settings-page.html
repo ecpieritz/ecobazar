@@ -25,7 +25,14 @@
       <div class="avatar-picker">
         <div>
           @if (profileForm.controls.avatarUrl.value; as avatar) {
-            <img [src]="avatar" alt="Profile preview" />
+            <img
+              [src]="avatar"
+              alt="Profile preview"
+              width="180"
+              height="180"
+              loading="lazy"
+              decoding="async"
+            />
           } @else {
             <span
               >{{ profileForm.controls.firstName.value.charAt(0)

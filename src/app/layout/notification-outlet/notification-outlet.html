@@ -1,0 +1,23 @@
+<section class="notification-region" aria-label="Notifications" aria-live="polite">
+  @for (notification of store.notifications(); track notification.id) {
+    <article
+      [class]="'notification notification--' + notification.kind"
+      [attr.role]="notification.kind === 'error' ? 'alert' : 'status'"
+    >
+      <span class="notification__icon" aria-hidden="true">
+        {{ notification.kind === 'success' ? '✓' : notification.kind === 'error' ? '!' : 'i' }}
+      </span>
+      <div>
+        <strong>{{ notification.title }}</strong>
+        <p>{{ notification.message }}</p>
+      </div>
+      <button
+        type="button"
+        [attr.aria-label]="'Dismiss ' + notification.title"
+        (click)="store.dismiss(notification.id)"
+      >
+        ×
+      </button>
+    </article>
+  }
+</section>

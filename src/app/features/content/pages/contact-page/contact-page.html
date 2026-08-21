@@ -1,0 +1,90 @@
+<div class="contact-page">
+  <div class="contact-layout container">
+    <aside class="contact-details" aria-labelledby="contact-details-title">
+      <h2 id="contact-details-title" class="visually-hidden">Contact details</h2>
+      <address>
+        <section>
+          <span aria-hidden="true">&#8982;</span>
+          <h3>Our location</h3>
+          <p>2715 Ash Drive<br />San Jose, California 83475</p>
+        </section>
+        <section>
+          <span aria-hidden="true">&#9993;</span>
+          <h3>Email us</h3>
+          <p>
+            <a href="mailto:hello@ecobazar.example">hello@ecobazar.example</a><br /><a
+              href="mailto:help@ecobazar.example"
+              >help@ecobazar.example</a
+            >
+          </p>
+        </section>
+        <section>
+          <span aria-hidden="true">&#9742;</span>
+          <h3>Call us</h3>
+          <p>
+            <a href="tel:+12195550114">(219) 555-0114</a><br /><a href="tel:+16433330487"
+              >(164) 333-0487</a
+            >
+          </p>
+        </section>
+      </address>
+    </aside>
+
+    <section class="contact-form" aria-labelledby="contact-title">
+      <p class="eyebrow">Contact Ecobazar</p>
+      <h1 id="contact-title">Just say hello!</h1>
+      <p>Have a question about the storefront or want to share feedback? Send us a message.</p>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="form-row">
+          <label
+            ><span>Name</span><input type="text" autocomplete="name" formControlName="name" />
+            @if (form.controls.name.touched && form.controls.name.invalid) {
+              <small>Please enter your name.</small>
+            }
+          </label>
+          <label
+            ><span>Email</span><input type="email" autocomplete="email" formControlName="email" />
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <small>Please enter a valid email.</small>
+            }
+          </label>
+        </div>
+        <label
+          ><span>Subject</span><input type="text" formControlName="subject" />
+          @if (form.controls.subject.touched && form.controls.subject.invalid) {
+            <small>Please enter a subject.</small>
+          }
+        </label>
+        <label
+          ><span>Message</span
+          ><textarea rows="5" maxlength="1000" formControlName="message"></textarea>
+          @if (form.controls.message.touched && form.controls.message.invalid) {
+            <small>Your message must contain at least 10 characters.</small>
+          }
+        </label>
+        @if (feedback(); as result) {
+          <p
+            class="form-feedback"
+            [class.form-feedback--error]="result.kind === 'error'"
+            [attr.role]="result.kind === 'error' ? 'alert' : 'status'"
+          >
+            {{ result.message }}
+          </p>
+        }
+        <button type="submit" [disabled]="pending()">
+          {{ pending() ? 'Sending\u2026' : 'Send Message' }}
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <section class="contact-map" aria-label="Map showing the Ecobazar store near San Jose" role="img">
+    <div class="map-road map-road--one"></div>
+    <div class="map-road map-road--two"></div>
+    <div class="map-road map-road--three"></div>
+    <div class="map-marker">
+      <span aria-hidden="true">&#9679;</span><strong>Ecobazar</strong
+      ><small>San Jose, California</small>
+    </div>
+  </section>
+</div>

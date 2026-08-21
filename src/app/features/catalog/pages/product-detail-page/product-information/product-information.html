@@ -86,7 +86,14 @@
           <article class="review">
             <div class="review__avatar" aria-hidden="true">
               @if (review.author.avatarUrl; as avatarUrl) {
-                <img [src]="avatarUrl" alt="" />
+                <img
+                  [src]="avatarUrl"
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async"
+                />
               } @else {
                 {{ review.author.name.charAt(0) }}
               }

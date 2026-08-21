@@ -10,7 +10,14 @@
           [attr.aria-current]="index === selectedIndex() ? 'true' : null"
           (click)="selectImage(index)"
         >
-          <img [src]="image.src" [alt]="image.alt" />
+          <img
+            [src]="image.src"
+            [alt]="image.alt"
+            width="1254"
+            height="1254"
+            loading="lazy"
+            decoding="async"
+          />
         </button>
       }
     </div>
@@ -18,7 +25,14 @@
 
   <figure class="gallery__stage">
     @if (selectedImage(); as image) {
-      <img [src]="image.src" [alt]="image.alt" />
+      <img
+        [src]="image.src"
+        [alt]="image.alt"
+        width="1254"
+        height="1254"
+        fetchpriority="high"
+        decoding="async"
+      />
     } @else {
       <span>Image unavailable</span>
     }

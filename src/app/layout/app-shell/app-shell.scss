@@ -7,4 +7,23 @@
 main {
   display: block;
   flex: 1;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  z-index: calc(var(--z-index-toast) + 1);
+  inset: 0 auto auto 1rem;
+  padding: 0.75rem 1rem;
+  color: var(--color-text-inverse);
+  background: var(--color-neutral-900);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  transform: translateY(-120%);
+
+  &:focus {
+    transform: translateY(0);
+  }
 }

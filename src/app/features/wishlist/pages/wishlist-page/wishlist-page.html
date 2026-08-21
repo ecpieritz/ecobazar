@@ -23,7 +23,14 @@
             <div class="wishlist-line__product">
               <a [routerLink]="['/shop', product.slug]">
                 @if (primaryImage(product); as image) {
-                  <img [src]="image.src" [alt]="image.alt" />
+                  <img
+                    [src]="image.src"
+                    [alt]="image.alt"
+                    width="1254"
+                    height="1254"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 } @else {
                   <span class="wishlist-line__placeholder" aria-hidden="true">?</span>
                 }

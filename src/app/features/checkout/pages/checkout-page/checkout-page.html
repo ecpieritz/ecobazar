@@ -206,7 +206,14 @@
           @for (line of cart.lines(); track line.product.id) {
             <li>
               @if (line.product.images[0]; as image) {
-                <img [src]="image.src" [alt]="image.alt" />
+                <img
+                  [src]="image.src"
+                  [alt]="image.alt"
+                  width="1254"
+                  height="1254"
+                  loading="lazy"
+                  decoding="async"
+                />
               }
               <span
                 >{{ line.product.name }} <small>×{{ line.quantity }}</small></span

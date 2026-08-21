@@ -1,0 +1,46 @@
+.not-found {
+  display: grid;
+  justify-items: center;
+  max-width: 48rem;
+  padding-block: clamp(3rem, 10vw, 8rem);
+  text-align: center;
+  svg {
+    width: min(100%, 36rem);
+  }
+  text {
+    fill: var(--color-primary);
+    font:
+      700 12rem Poppins,
+      sans-serif;
+  }
+  circle {
+    fill: var(--color-primary-subtle);
+  }
+  .leaf {
+    fill: var(--color-primary-subtle);
+  }
+  .sprout {
+    fill: none;
+    stroke: var(--color-primary-active);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 8;
+  }
+  h1 {
+    margin: 1rem 0 0.75rem;
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+  }
+  p {
+    max-width: 38rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  a {
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-weight: 600;
+  }
+}
